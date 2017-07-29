@@ -1,5 +1,6 @@
 function img = myLinearContrastStretching(org)
 % Contrast Enhancement using Linear Contrast Stretching
+% Maps from current histogram to extended histogram
 
 org = im2double(org);
 org_min = min(min(org));

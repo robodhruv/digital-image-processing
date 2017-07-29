@@ -94,8 +94,18 @@ subplot(2, 2, 2), imagesc(img);
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
-</pre><pre class="codeoutput">Elapsed time is 0.004447 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+
+<span class="comment">% Since the histogram for this image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.</span>
+org = imread(<span class="string">'satmap.png'</span>);
+img = myLinearContrastStretching(org);
+
+figure
+subplot(2, 2, 1), imshow(org)
+subplot(2, 2, 2), imshow(img)
+subplot(2, 2, 3), imhist(org)
+subplot(2, 2 ,4), imhist(img)
+</pre><pre class="codeoutput">Elapsed time is 0.006925 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q2. Gray Scale Transforms on Images
 % Simple gray scale transforms on images.
@@ -118,6 +128,16 @@ subplot(2, 2, 2), imagesc(img);
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
+
+% Since the histogram for this image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.
+org = imread('satmap.png');
+img = myLinearContrastStretching(org);
+
+figure
+subplot(2, 2, 1), imshow(org)
+subplot(2, 2, 2), imshow(img)
+subplot(2, 2, 3), imhist(org)
+subplot(2, 2 ,4), imhist(img)
 
 ##### SOURCE END #####
 --></body></html>

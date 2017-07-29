@@ -19,3 +19,13 @@ subplot(2, 2, 2), imagesc(img);
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
+
+% Since the histogram for this image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.
+org = imread('satmap.png');
+img = myLinearContrastStretching(org);
+
+figure
+subplot(2, 2, 1), imshow(org)
+subplot(2, 2, 2), imshow(img)
+subplot(2, 2, 3), imhist(org)
+subplot(2, 2 ,4), imhist(img)

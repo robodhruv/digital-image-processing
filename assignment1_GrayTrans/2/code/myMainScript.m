@@ -2,11 +2,15 @@
 % Simple gray scale transforms on images.
 
 %% A. Linear Contrast Stretching
+% <include>myLinearContrastStretching.m</include>
 
+% This function improves contrast by stretching the histogram to the whole
+% available color space.
 org = imread('../data/barbara.png');
 tic;
 img = myLinearContrastStretching(org);
 toc;
+
 
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);

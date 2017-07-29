@@ -66,10 +66,26 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="codeinput">org = imread(<span class="string">'../data/barbara.png'</span>);
+  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
+<span class="keyword">function</span> img = myLinearContrastStretching(org)
+<span class="comment">% Contrast Enhancement using Linear Contrast Stretching</span>
+<span class="comment">% Maps from current histogram to extended histogram, any aspect ratio</span>
+
+org = im2double(org);
+<span class="comment">% Works for any aspect ratio</span>
+org_min = repmat(min(min(org)), size(org, 1), size(org, 2));
+org_max = repmat(max(max(org)), size(org, 1), size(org, 2));
+
+
+img = mat2gray((org - org_min) * 255 ./ (org_max - org_min));
+
+</pre><pre class="codeinput"><span class="comment">% This function improves contrast by stretching the histogram to the whole</span>
+<span class="comment">% available color space.</span>
+org = imread(<span class="string">'../data/barbara.png'</span>);
 tic;
 img = myLinearContrastStretching(org);
 toc;
+
 
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);
@@ -78,18 +94,22 @@ subplot(2, 2, 2), imagesc(img);
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
-</pre><pre class="codeoutput">Elapsed time is 0.005138 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.004447 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q2. Gray Scale Transforms on Images
 % Simple gray scale transforms on images.
 
 %% A. Linear Contrast Stretching
+% <include>myLinearContrastStretching.m</include>
 
+% This function improves contrast by stretching the histogram to the whole
+% available color space.
 org = imread('../data/barbara.png');
 tic;
 img = myLinearContrastStretching(org);
 toc;
+
 
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);

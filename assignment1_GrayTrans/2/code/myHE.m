@@ -1,25 +1,18 @@
 function img = myHE(org)
-% Performs global histogram equalisation on the input image
-% One-D for now
+% Performs global histogram equalization on the input image
 
-mycdf = zeros(256, size(org, 3));
+mycdf = zeros(256, size(org, 3)); % Treating channels independently
 for i = 1:size(org, 3)
-    mycdf(:, i) = cumsum(imhist(org(:,:,i))) / (size(org, 1) * size(org, 2));
+    mycdf(:, i) = cumsum(imhist(org(:,:,i))) / numel(org(:,:,1));
 end
 
 %img = arrayfun(mycdf(y, x), org);
 % arrayfun is not sped up by JIT compilation, and considerably slower in
-% this simple case, compared to naive loops.
+% this simple case, compared to naive loops. (ambiguous)
 
 img = zeros(size(org)); % Pre-allocating
 for k = 1:size(org, 3)
-	for i = 1:size(org, 1)
-        for j = 1:size(org, 2)
-            if org(i, j, k)==0
-                img(i, j, k) = 0;
-            else
-                img(i, j, k) = mycdf(org(i, j, k), k);
-            end
-        end
-	end
+    % Computing independently for each channel
+    cdfi = mycdf(:,k);
+    img(:,:,k) = cdfi(org(:,:,k) + 1);
 end

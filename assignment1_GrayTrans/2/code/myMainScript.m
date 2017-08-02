@@ -82,3 +82,17 @@ img = myHE(org);
 figure
 subplot(1,2,1), imshow(org);
 subplot(1,2,2), imshow(img);
+
+
+%% C. Adaptive Histogram Equalization
+% <include>myAHE.m</include>
+
+% Evaluating for the standard images given:
+org = imread('../data/barbara.png');
+tic
+img = myAHE(org, 40); % Taking relevant window
+toc
+
+figure
+subplot(1, 2, 1), imshow(org)
+subplot(1, 2, 2), imshow(img)

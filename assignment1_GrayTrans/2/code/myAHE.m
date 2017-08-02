@@ -1,6 +1,8 @@
-tic
-windowsize = 10;
-org = imread('../data/TEM.png');
+function img = myAHE(org, windowsize)
+% Performs Adaptive Histogram Equalization on the input image, with the
+% windowsize given by the argument passed.
+
+org = org+1; % Preserving the original blacks of the image
 [x, y, k] = size(org);
 orgp = zeros(size(org) + 2 * [windowsize, windowsize]);
 [xp, yp, k] = size(orgp);
@@ -11,24 +13,10 @@ orgp = mat2gray(orgp);
 for i = windowsize+1:xp-windowsize
     for j = windowsize+1:yp-windowsize
         mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
-        mypdf(1) = mypdf(2); % Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity 
+        mypdf = mypdf(2:end); % Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity 
         mycdf = cumsum(mypdf)...
             / max(cumsum(mypdf));
         img(i, j) = mycdf(max(round(orgp(i, j) * 255), 1));
     end
-    i
 end
-toc
 img = img(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize);
-
-% 
-% tic
-% windowsize = 20;
-% org = imread('../data/barbara.png');
-% [x, y, k] = size(org)
-% img = zeros(size(org));
-% ia = [1:x];
-% ja = [1:y];
-% 
-% img = arrayfun(@(i, j)ahe_core(i, j, windowsize, org), ia, ja);
-% toc;

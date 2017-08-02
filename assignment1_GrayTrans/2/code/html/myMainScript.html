@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Q2. Gray Scale Transforms on Images</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-07-30"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+      --><title>Q2. Gray Scale Transforms on Images</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images. Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
+  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images. Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li><li><a href="#3">C. Adaptive Histogram Equalization</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myLinearContrastStretching(org)
 <span class="comment">% Contrast Enhancement using Linear Contrast Stretching</span>
 <span class="comment">% Maps from current histogram to extended histogram, any aspect ratio</span>
@@ -104,10 +104,11 @@ subplot(2, 2, 1), imshow(org)
 subplot(2, 2, 2), imshow(img)
 subplot(2, 2, 3), imhist(org)
 subplot(2, 2 ,4), imhist(img)
-</pre><pre class="codeoutput">Elapsed time is 0.004583 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.033911 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <h2>B. Global Histogram Equalization<a name="2"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myHE(org)
-<span class="comment">% Performs global histogram equalization on the input image</span>
+<span class="comment">% Performs global histogram equalization on the input image. Works for any</span>
+<span class="comment">% number of channels.</span>
 
 mycdf = zeros(256, size(org, 3)); <span class="comment">% Treating channels independently</span>
 <span class="keyword">for</span> i = 1:size(org, 3)
@@ -173,9 +174,43 @@ img = myHE(org);
 figure
 subplot(1,2,1), imshow(org);
 subplot(1,2,2), imshow(img);
-</pre><pre class="codeoutput">Elapsed time is 0.002437 seconds.
-Elapsed time is 0.003621 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+</pre><pre class="codeoutput">Elapsed time is 0.006272 seconds.
+Elapsed time is 0.003796 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <h2>C. Adaptive Histogram Equalization<a name="3"></a></h2><pre class="language-matlab">
+<span class="keyword">function</span> img = myAHE(org, windowsize)
+<span class="comment">% Performs Adaptive Histogram Equalization on the input image, with the</span>
+<span class="comment">% windowsize given by the argument passed.</span>
+
+org = org+1; <span class="comment">% Preserving the original blacks of the image</span>
+[x, y, k] = size(org);
+orgp = zeros(size(org) + 2 * [windowsize, windowsize]);
+[xp, yp, k] = size(orgp);
+orgp(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize) = org;
+img = zeros(size(orgp));
+orgp = mat2gray(orgp);
+
+<span class="keyword">for</span> i = windowsize+1:xp-windowsize
+    <span class="keyword">for</span> j = windowsize+1:yp-windowsize
+        mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
+        mypdf = mypdf(2:end); <span class="comment">% Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity </span>
+        mycdf = cumsum(mypdf)<span class="keyword">...</span>
+            / max(cumsum(mypdf));
+        img(i, j) = mycdf(max(round(orgp(i, j) * 255), 1));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+img = img(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize);
+
+</pre><pre class="codeinput"><span class="comment">% Evaluating for the standard images given:</span>
+org = imread(<span class="string">'../data/barbara.png'</span>);
+tic
+img = myAHE(org, 40);
+toc
+
+figure
+subplot(1, 2, 1), imshow(org)
+subplot(1, 2, 2), imshow(img)
+</pre><pre class="codeoutput">Elapsed time is 21.539140 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q2. Gray Scale Transforms on Images
 % Simple gray scale transforms on images.
@@ -261,5 +296,19 @@ img = myHE(org);
 figure
 subplot(1,2,1), imshow(org);
 subplot(1,2,2), imshow(img);
+
+
+%% C. Adaptive Histogram Equalization
+% <include>myAHE.m</include>
+
+% Evaluating for the standard images given:
+org = imread('../data/barbara.png');
+tic
+img = myAHE(org, 40);
+toc
+
+figure
+subplot(1, 2, 1), imshow(org)
+subplot(1, 2, 2), imshow(img)
 ##### SOURCE END #####
 --></body></html>

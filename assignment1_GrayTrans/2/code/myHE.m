@@ -1,5 +1,6 @@
 function img = myHE(org)
-% Performs global histogram equalization on the input image
+% Performs global histogram equalization on the input image. Works for any
+% number of channels.
 
 mycdf = zeros(256, size(org, 3)); % Treating channels independently
 for i = 1:size(org, 3)

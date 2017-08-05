@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Q2. Gray Scale Transforms on Images</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+      --><title>Q2. Gray Scale Transforms on Images</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-06"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -86,26 +86,79 @@ tic;
 img = myLinearContrastStretching(org);
 toc;
 
-
+figure
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'Barbara'</span>)
 colorbar;
 subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'After LCS'</span>)
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
 
-<span class="comment">% Since the histogram for this image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.</span>
+org = imread(<span class="string">'../data/TEM.png'</span>);
+tic;
+img = myLinearContrastStretching(org);
+toc;
+
+figure
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'TEM'</span>)
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'After LCS'</span>)
+colorbar;
+subplot(2, 2, 3), imhist(org);
+subplot(2, 2, 4), imhist(img);
+
+<span class="comment">% Since the histogram for most of these image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.</span>
 org = imread(<span class="string">'satmap.png'</span>);
 img = myLinearContrastStretching(org);
 
 figure
 subplot(2, 2, 1), imshow(org)
+title(<span class="string">'satmap'</span>)
 subplot(2, 2, 2), imshow(img)
+title(<span class="string">'After LCS'</span>)
 subplot(2, 2, 3), imhist(org)
 subplot(2, 2 ,4), imhist(img)
-</pre><pre class="codeoutput">Elapsed time is 0.033911 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <h2>B. Global Histogram Equalization<a name="2"></a></h2><pre class="language-matlab">
+
+
+org = imread(<span class="string">'../data/canyon.png'</span>);
+tic;
+img = myLinearContrastStretching(org);
+toc;
+
+figure(<span class="string">'Position'</span>, [100 100 1500 600])
+colormap(jet(200));
+subplot(3, 4, 1), imshow(org);
+title(<span class="string">'Canyon'</span>);
+subplot(3, 4, 5), imshow(img);
+title(<span class="string">'After LCS'</span>);
+subplot(3, 4, 2), imagesc(org(:,:,1));
+title(<span class="string">'Channel 1'</span>)
+colorbar;
+subplot(3, 4, 6), imagesc(img(:,:,1));
+colorbar;
+subplot(3, 4, 3), imagesc(org(:,:,2));
+title(<span class="string">'Channel 2'</span>)
+colorbar;
+subplot(3, 4, 7), imagesc(img(:,:,2));
+colorbar;
+subplot(3, 4, 4), imagesc(org(:,:,3));
+title(<span class="string">'Channel 3'</span>)
+colorbar;
+subplot(3, 4, 8), imagesc(img(:,:,3));
+colorbar;
+subplot(3, 4, 10), imhist(img(:,:,1));
+subplot(3, 4, 11), imhist(img(:,:,2));
+subplot(3, 4, 12), imhist(img(:,:,3));
+</pre><pre class="codeoutput">Elapsed time is 0.010818 seconds.
+Elapsed time is 0.004752 seconds.
+Elapsed time is 0.013330 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <h2>B. Global Histogram Equalization<a name="2"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myHE(org)
 <span class="comment">% Performs global histogram equalization on the input image. Works for any</span>
 <span class="comment">% number of channels.</span>
@@ -156,6 +209,7 @@ colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
 
+
 <span class="comment">% Since the histogram for this image was already quite wide, we are unable</span>
 <span class="comment">% to appreciate the function of the algorithm. Let's look at this image instead.</span>
 org = imread(<span class="string">'satmap.png'</span>);
@@ -167,16 +221,40 @@ subplot(2, 2, 2), imshow(img)
 subplot(2, 2, 3), imhist(org)
 subplot(2, 2 ,4), imhist(img)
 
-<span class="comment">% The function is highly modular and can be extended to RGB images as follows</span>
-org = imread(<span class="string">'../data/canyon.png'</span>);
-img = myHE(org);
 
-figure
-subplot(1,2,1), imshow(org);
-subplot(1,2,2), imshow(img);
-</pre><pre class="codeoutput">Elapsed time is 0.006272 seconds.
-Elapsed time is 0.003796 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <h2>C. Adaptive Histogram Equalization<a name="3"></a></h2><pre class="language-matlab">
+org = imread(<span class="string">'../data/canyon.png'</span>);
+tic;
+img = myHE(org);
+toc;
+
+figure(<span class="string">'Position'</span>, [100 100 1500 600])
+colormap(jet(200));
+subplot(3, 4, 1), imshow(org);
+title(<span class="string">'Original Image'</span>);
+subplot(3, 4, 5), imshow(img);
+title(<span class="string">'After Global HE'</span>);
+subplot(3, 4, 2), imagesc(org(:,:,1));
+title(<span class="string">'Channel 1'</span>)
+colorbar;
+subplot(3, 4, 6), imagesc(img(:,:,1));
+colorbar;
+subplot(3, 4, 3), imagesc(org(:,:,2));
+title(<span class="string">'Channel 2'</span>)
+colorbar;
+subplot(3, 4, 7), imagesc(img(:,:,2));
+colorbar;
+subplot(3, 4, 4), imagesc(org(:,:,3));
+title(<span class="string">'Channel 3'</span>)
+colorbar;
+subplot(3, 4, 8), imagesc(img(:,:,3));
+colorbar;
+subplot(3, 4, 10), imhist(img(:,:,1));
+subplot(3, 4, 11), imhist(img(:,:,2));
+subplot(3, 4, 12), imhist(img(:,:,3));
+</pre><pre class="codeoutput">Elapsed time is 0.006318 seconds.
+Elapsed time is 0.003840 seconds.
+Elapsed time is 0.010008 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_08.png" alt=""> <h2>C. Adaptive Histogram Equalization<a name="3"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myAHE(org, windowsize)
 <span class="comment">% Performs Adaptive Histogram Equalization on the input image, with the</span>
 <span class="comment">% windowsize given by the argument passed.</span>
@@ -203,14 +281,27 @@ img = img(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize);
 </pre><pre class="codeinput"><span class="comment">% Evaluating for the standard images given:</span>
 org = imread(<span class="string">'../data/barbara.png'</span>);
 tic
-img = myAHE(org, 40);
+img = myAHE(org, 30); <span class="comment">% Taking relevant window</span>
 toc
+img2 = myAHE(org, 5);
+img3 = myAHE(org, 100);
 
-figure
-subplot(1, 2, 1), imshow(org)
-subplot(1, 2, 2), imshow(img)
-</pre><pre class="codeoutput">Elapsed time is 21.539140 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+figure(<span class="string">'Position'</span>, [100 100 700 700])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'Original'</span>)
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'W = 30'</span>)
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title(<span class="string">'W = 5'</span>)
+colorbar;
+subplot(2, 2, 4), imagesc(img3);
+title(<span class="string">'W = 100'</span>)
+colorbar;
+</pre><pre class="codeoutput">Elapsed time is 20.358352 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q2. Gray Scale Transforms on Images
 % Simple gray scale transforms on images.
@@ -226,25 +317,75 @@ tic;
 img = myLinearContrastStretching(org);
 toc;
 
-
+figure
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);
+title('Barbara')
 colorbar;
 subplot(2, 2, 2), imagesc(img);
+title('After LCS')
 colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
 
-% Since the histogram for this image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.
+org = imread('../data/TEM.png');
+tic;
+img = myLinearContrastStretching(org);
+toc;
+
+figure
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title('TEM')
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title('After LCS')
+colorbar;
+subplot(2, 2, 3), imhist(org);
+subplot(2, 2, 4), imhist(img);
+
+% Since the histogram for most of these image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.
 org = imread('satmap.png');
 img = myLinearContrastStretching(org);
 
 figure
 subplot(2, 2, 1), imshow(org)
+title('satmap')
 subplot(2, 2, 2), imshow(img)
+title('After LCS')
 subplot(2, 2, 3), imhist(org)
 subplot(2, 2 ,4), imhist(img)
 
+
+org = imread('../data/canyon.png');
+tic;
+img = myLinearContrastStretching(org);
+toc;
+
+figure('Position', [100 100 1500 600])
+colormap(jet(200));
+subplot(3, 4, 1), imshow(org);
+title('Canyon');
+subplot(3, 4, 5), imshow(img);
+title('After LCS');
+subplot(3, 4, 2), imagesc(org(:,:,1));
+title('Channel 1')
+colorbar;
+subplot(3, 4, 6), imagesc(img(:,:,1));
+colorbar;
+subplot(3, 4, 3), imagesc(org(:,:,2));
+title('Channel 2')
+colorbar;
+subplot(3, 4, 7), imagesc(img(:,:,2));
+colorbar;
+subplot(3, 4, 4), imagesc(org(:,:,3));
+title('Channel 3')
+colorbar;
+subplot(3, 4, 8), imagesc(img(:,:,3));
+colorbar;
+subplot(3, 4, 10), imhist(img(:,:,1));
+subplot(3, 4, 11), imhist(img(:,:,2));
+subplot(3, 4, 12), imhist(img(:,:,3));
 %% B. Global Histogram Equalization
 % <include>myHE.m</include>
 
@@ -278,6 +419,7 @@ colorbar;
 subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
 
+
 % Since the histogram for this image was already quite wide, we are unable
 % to appreciate the function of the algorithm. Let's look at this image instead.
 org = imread('satmap.png');
@@ -289,13 +431,36 @@ subplot(2, 2, 2), imshow(img)
 subplot(2, 2, 3), imhist(org)
 subplot(2, 2 ,4), imhist(img)
 
-% The function is highly modular and can be extended to RGB images as follows
-org = imread('../data/canyon.png');
-img = myHE(org);
 
-figure
-subplot(1,2,1), imshow(org);
-subplot(1,2,2), imshow(img);
+org = imread('../data/canyon.png');
+tic;
+img = myHE(org);
+toc;
+
+figure('Position', [100 100 1500 600])
+colormap(jet(200));
+subplot(3, 4, 1), imshow(org);
+title('Original Image');
+subplot(3, 4, 5), imshow(img);
+title('After Global HE');
+subplot(3, 4, 2), imagesc(org(:,:,1));
+title('Channel 1')
+colorbar;
+subplot(3, 4, 6), imagesc(img(:,:,1));
+colorbar;
+subplot(3, 4, 3), imagesc(org(:,:,2));
+title('Channel 2')
+colorbar;
+subplot(3, 4, 7), imagesc(img(:,:,2));
+colorbar;
+subplot(3, 4, 4), imagesc(org(:,:,3));
+title('Channel 3')
+colorbar;
+subplot(3, 4, 8), imagesc(img(:,:,3));
+colorbar;
+subplot(3, 4, 10), imhist(img(:,:,1));
+subplot(3, 4, 11), imhist(img(:,:,2));
+subplot(3, 4, 12), imhist(img(:,:,3));
 
 
 %% C. Adaptive Histogram Equalization
@@ -304,11 +469,24 @@ subplot(1,2,2), imshow(img);
 % Evaluating for the standard images given:
 org = imread('../data/barbara.png');
 tic
-img = myAHE(org, 40);
+img = myAHE(org, 30); % Taking relevant window
 toc
+img2 = myAHE(org, 5);
+img3 = myAHE(org, 100);
 
-figure
-subplot(1, 2, 1), imshow(org)
-subplot(1, 2, 2), imshow(img)
+figure('Position', [100 100 700 700])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title('Original')
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title('W = 30')
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title('W = 5')
+colorbar;
+subplot(2, 2, 4), imagesc(img3);
+title('W = 100')
+colorbar;
 ##### SOURCE END #####
 --></body></html>

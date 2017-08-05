@@ -308,29 +308,17 @@ img2_3 = myCLAHE(img_3, 40, 0.05);
 
 figure('Position', [100 100 1200 700])
 colormap(jet(200));
-subplot(3, 3, 1), imagesc(org(:,:,1));
-title('Channel 1')
+subplot(3, 3, 1), imagesc(org);
+title('Barbara')
 colorbar;
-subplot(3, 3, 2), imagesc(org(:,:,2));
-title('Channel 2')
-colorbar;
-subplot(3, 3, 3), imagesc(org(:,:,3));
-title('Channel 3')
-colorbar;
-subplot(3, 3, 1), imagesc(img_1);
+subplot(2, 2, 2), imagesc(img);
 title('W = 40; T = 0.01')
 colorbar;
-subplot(3, 3, 1), imagesc(img_2);
-colorbar;
-subplot(3, 3, 1), imagesc(img_3);
-colorbar;
-subplot(3, 3, 1), imagesc(img2_1);
+subplot(2, 2, 3), imagesc(img2);
 title('Refined')
 colorbar;
-subplot(3, 3, 1), imagesc(img2_2);
-colorbar;
-subplot(3, 3, 1), imagesc(img2_3);
-colorbar;
+subplot(2, 2, 4), imshow(img);
+title('After CLAHE')
 
 %% Thorough Analysis of AHE/CLAHE
 % Results from the thorough analysis of AHE and CLAHE, run with an exhaustive set of parameters can be found in the link given below.

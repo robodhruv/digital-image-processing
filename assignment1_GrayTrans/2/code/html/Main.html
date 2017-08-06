@@ -155,9 +155,9 @@ colorbar;
 subplot(3, 4, 10), imhist(img(:,:,1));
 subplot(3, 4, 11), imhist(img(:,:,2));
 subplot(3, 4, 12), imhist(img(:,:,3));
-</pre><pre class="codeoutput">Elapsed time is 0.006228 seconds.
-Elapsed time is 0.007386 seconds.
-Elapsed time is 0.010327 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.237758 seconds.
+Elapsed time is 0.009043 seconds.
+Elapsed time is 0.023177 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <h2>B. Global Histogram Equalization<a name="2"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myHE(org)
 <span class="comment">% Performs global histogram equalization on the input image. Works for any</span>
@@ -251,9 +251,9 @@ colorbar;
 subplot(3, 4, 10), imhist(img(:,:,1));
 subplot(3, 4, 11), imhist(img(:,:,2));
 subplot(3, 4, 12), imhist(img(:,:,3));
-</pre><pre class="codeoutput">Elapsed time is 0.013758 seconds.
-Elapsed time is 0.008459 seconds.
-Elapsed time is 0.014379 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.019603 seconds.
+Elapsed time is 0.009869 seconds.
+Elapsed time is 0.019037 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_08.png" alt=""> <h2>C. Adaptive Histogram Equalization<a name="3"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myAHE(org, windowsize)
 <span class="comment">% Performs Adaptive Histogram Equalization on the input image, with the</span>
@@ -267,7 +267,7 @@ orgp(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize) = org;
 img = zeros(size(orgp));
 orgp = mat2gray(orgp);
 
-<span class="keyword">parfor</span> i = windowsize+1:xp-windowsize
+<span class="keyword">for</span> i = windowsize+1:xp-windowsize
     <span class="keyword">for</span> j = windowsize+1:yp-windowsize
         mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
         mypdf = mypdf(2:end); <span class="comment">% Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity </span>
@@ -366,8 +366,8 @@ subplot(3, 4, 11), imagesc(img3_2);
 colorbar;
 subplot(3, 4, 12), imagesc(img3_3);
 colorbar;
-</pre><pre class="codeoutput">Elapsed time is 3.049956 seconds.
-Elapsed time is 5.731981 seconds.
+</pre><pre class="codeoutput">Elapsed time is 18.801078 seconds.
+Elapsed time is 51.582240 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_10.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_11.png" alt=""> <h2>C. Contrast Limited Adaptive Histogram Equalization<a name="4"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myCLAHE(org, windowsize, threshold)
 <span class="comment">% Performs Contrast Limited Adaptive Histogram Equalization on the input</span>
@@ -381,7 +381,7 @@ orgp(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize) = org;
 img = zeros(size(orgp));
 orgp = mat2gray(orgp);
 
-<span class="keyword">parfor</span> i = windowsize+1:xp-windowsize
+<span class="keyword">for</span> i = windowsize+1:xp-windowsize
     <span class="keyword">for</span> j = windowsize+1:yp-windowsize
         mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
         mypdf = mypdf(2:end); <span class="comment">% Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity</span>
@@ -473,8 +473,8 @@ subplot(3, 3, 8), imagesc(img2_2);
 colorbar;
 subplot(3, 3, 9), imagesc(img2_3);
 colorbar;
-</pre><pre class="codeoutput">Elapsed time is 4.128347 seconds.
-Elapsed time is 6.382083 seconds.
+</pre><pre class="codeoutput">Elapsed time is 29.242706 seconds.
+Elapsed time is 48.129117 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_12.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_13.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_14.png" alt=""> <h2>Thorough Analysis of AHE/CLAHE<a name="5"></a></h2><p>Results from the thorough analysis of AHE and CLAHE, run with an exhaustive set of parameters can be found in the link given below.</p><pre class="codeinput"><span class="comment">% &lt;https://drive.google.com/drive/folders/0B3AJ0qIoMnDsUVU4YkM1blFoSkk?usp=sharing&gt;</span>
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####

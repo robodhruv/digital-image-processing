@@ -1,5 +1,5 @@
 %% Report for Question 1
-% Made by Dhruv Shah, Bhavesh Thakkar, and Dhanvi Sreenivasan. This question dealt with oversampling ans subsampling images to
+% This question dealt with oversampling ans subsampling images to
 % shrink/expand them. Three methods were chiefly used. Subsampling for
 % shrinking the image, and Bilinear interpolation and Nearest Neighbour
 % interpolation for expanding the image.

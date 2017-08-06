@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images. Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li><li><a href="#3">C. Adaptive Histogram Equalization</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
+  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images. Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li><li><a href="#3">C. Adaptive Histogram Equalization</a></li><li><a href="#4">C. Contrast Limited Adaptive Histogram Equalization</a></li><li><a href="#5">Thorough Analysis of AHE/CLAHE</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myLinearContrastStretching(org)
 <span class="comment">% Contrast Enhancement using Linear Contrast Stretching</span>
 <span class="comment">% Maps from current histogram to extended histogram, any aspect ratio</span>
@@ -155,9 +155,9 @@ colorbar;
 subplot(3, 4, 10), imhist(img(:,:,1));
 subplot(3, 4, 11), imhist(img(:,:,2));
 subplot(3, 4, 12), imhist(img(:,:,3));
-</pre><pre class="codeoutput">Elapsed time is 0.010818 seconds.
-Elapsed time is 0.004752 seconds.
-Elapsed time is 0.013330 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.274186 seconds.
+Elapsed time is 0.009582 seconds.
+Elapsed time is 0.025880 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <h2>B. Global Histogram Equalization<a name="2"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myHE(org)
 <span class="comment">% Performs global histogram equalization on the input image. Works for any</span>
@@ -251,9 +251,9 @@ colorbar;
 subplot(3, 4, 10), imhist(img(:,:,1));
 subplot(3, 4, 11), imhist(img(:,:,2));
 subplot(3, 4, 12), imhist(img(:,:,3));
-</pre><pre class="codeoutput">Elapsed time is 0.006318 seconds.
-Elapsed time is 0.003840 seconds.
-Elapsed time is 0.010008 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.019803 seconds.
+Elapsed time is 0.011606 seconds.
+Elapsed time is 0.020172 seconds.
 </pre><img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_06.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_07.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_08.png" alt=""> <h2>C. Adaptive Histogram Equalization<a name="3"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myAHE(org, windowsize)
 <span class="comment">% Performs Adaptive Histogram Equalization on the input image, with the</span>
@@ -289,7 +289,7 @@ img3 = myAHE(org, 100);
 figure(<span class="string">'Position'</span>, [100 100 700 700])
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);
-title(<span class="string">'Original'</span>)
+title(<span class="string">'Barbara'</span>)
 colorbar;
 subplot(2, 2, 2), imagesc(img);
 title(<span class="string">'W = 30'</span>)
@@ -300,8 +300,182 @@ colorbar;
 subplot(2, 2, 4), imagesc(img3);
 title(<span class="string">'W = 100'</span>)
 colorbar;
-</pre><pre class="codeoutput">Elapsed time is 20.358352 seconds.
-</pre><img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+
+
+org = imread(<span class="string">'../data/TEM.png'</span>);
+tic
+img = myAHE(org, 35); <span class="comment">% Taking relevant window</span>
+toc
+img2 = myAHE(org, 5);
+img3 = myAHE(org, 100);
+
+figure(<span class="string">'Position'</span>, [100 100 700 700])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'TEM'</span>)
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'W = 30'</span>)
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title(<span class="string">'W = 5'</span>)
+colorbar;
+subplot(2, 2, 4), imagesc(img3);
+title(<span class="string">'W = 100'</span>)
+colorbar;
+
+org = imread(<span class="string">'../data/canyon.png'</span>);
+<span class="comment">% Computing AHE independently (Can be incorporated in the function itself, for better results)</span>
+img_1 = myAHE(org(:,:,1), 30);
+img_2 = myAHE(org(:,:,2), 30);
+img_3 = myAHE(org(:,:,3), 30);
+img = cat(3, img_1, img_2, img_3);
+img2_1 = myAHE(org(:,:,1), 5);
+img2_2 = myAHE(org(:,:,2), 5);
+img2_3 = myAHE(org(:,:,3), 5);
+img2 = cat(3, img2_1, img2_2, img2_3);
+img3_1 = myAHE(org(:,:,1), 100);
+img3_2 = myAHE(org(:,:,2), 100);
+img3_3 = myAHE(org(:,:,3), 100);
+img3 = cat(3, img3_1, img3_2, img3_3);
+
+figure(<span class="string">'Position'</span>, [100 100 1200 700])
+colormap(jet(200));
+
+subplot(3, 4, 1), imshow(img);
+title(<span class="string">'W = 30'</span>);
+subplot(3, 4, 5), imshow(img2);
+title(<span class="string">'W = 30'</span>);
+subplot(3, 4, 9), imshow(img3);
+title(<span class="string">'W = 30'</span>);
+subplot(3, 4, 2), imagesc(img_1);
+colorbar;
+subplot(3, 4, 3), imagesc(img_2);
+colorbar;
+subplot(3, 4, 4), imagesc(img_3);
+colorbar;
+subplot(3, 4, 6), imagesc(img2_1);
+colorbar;
+subplot(3, 4, 7), imagesc(img2_2);
+colorbar;
+subplot(3, 4, 8), imagesc(img2_3);
+colorbar;
+subplot(3, 4, 10), imagesc(img3_1);
+colorbar;
+subplot(3, 4, 11), imagesc(img3_2);
+colorbar;
+subplot(3, 4, 12), imagesc(img3_3);
+colorbar;
+</pre><pre class="codeoutput">Elapsed time is 18.460071 seconds.
+Elapsed time is 45.844617 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_09.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_10.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_11.png" alt=""> <h2>C. Contrast Limited Adaptive Histogram Equalization<a name="4"></a></h2><pre class="language-matlab">
+<span class="keyword">function</span> img = myCLAHE(org, windowsize, threshold)
+<span class="comment">% Performs Contrast Limited Adaptive Histogram Equalization on the input</span>
+<span class="comment">% image, with the windowsize and threshold passed given by the argument passed.</span>
+
+org = org+1; <span class="comment">% Preserving the original blacks of the image</span>
+[x, y, k] = size(org);
+orgp = zeros(size(org) + 2 * [windowsize, windowsize]);
+[xp, yp, k] = size(orgp);
+orgp(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize) = org;
+img = zeros(size(orgp));
+orgp = mat2gray(orgp);
+
+<span class="keyword">for</span> i = windowsize+1:xp-windowsize
+    <span class="keyword">for</span> j = windowsize+1:yp-windowsize
+        mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
+        mypdf = mypdf(2:end); <span class="comment">% Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity</span>
+        num_el = max(cumsum(mypdf));
+        mypdf_clipped = min(mypdf, threshold*num_el);
+        num_el_clipped = max(cumsum(mypdf_clipped));
+        mypdf_clipped = mypdf_clipped + (num_el_clipped - num_el)/255;
+        mycdf = cumsum(mypdf_clipped)<span class="keyword">...</span>
+            / num_el;
+        img(i, j) = mycdf(max(round(orgp(i, j) * 255), 1));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+img = img(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize);
+
+</pre><pre class="codeinput"><span class="comment">% Evaluating for the standard images given:</span>
+
+org = imread(<span class="string">'../data/barbara.png'</span>);
+tic
+img = myCLAHE(org, 40, 0.1); <span class="comment">% Taking relevant window and thresholds</span>
+toc
+img2 = myCLAHE(img, 40, 0.05); <span class="comment">% Refining the contrast enhancement</span>
+
+figure(<span class="string">'Position'</span>, [100 100 500 500])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'Barbara'</span>)
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'W = 40; T = 0.01'</span>)
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title(<span class="string">'Refined'</span>)
+colorbar;
+subplot(2, 2, 4), imshow(img);
+title(<span class="string">'After CLAHE'</span>)
+
+
+org = imread(<span class="string">'../data/TEM.png'</span>);
+tic
+img = myCLAHE(org, 40, 0.1); <span class="comment">% Taking relevant window and thresholds</span>
+toc
+img2 = myCLAHE(img, 40, 0.05); <span class="comment">% Refining the contrast enhancement</span>
+
+figure(<span class="string">'Position'</span>, [100 100 500 500])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title(<span class="string">'TEM'</span>)
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title(<span class="string">'W = 40; T = 0.01'</span>)
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title(<span class="string">'Refined'</span>)
+colorbar;
+subplot(2, 2, 4), imshow(img);
+title(<span class="string">'After CLAHE'</span>)
+
+org = imread(<span class="string">'../data/canyon.png'</span>);
+img_1 = myCLAHE(org(:,:,1), 40, 0.1); <span class="comment">% Taking relevant window and thresholds</span>
+img_2 = myCLAHE(org(:,:,2), 40, 0.1);
+img_3 = myCLAHE(org(:,:,3), 40, 0.1);
+
+img2_1 = myCLAHE(img_1, 40, 0.05); <span class="comment">% Refining the contrast enhancement</span>
+img2_2 = myCLAHE(img_2, 40, 0.05);
+img2_3 = myCLAHE(img_3, 40, 0.05);
+
+figure(<span class="string">'Position'</span>, [100 100 1200 700])
+colormap(jet(200));
+subplot(3, 3, 1), imagesc(org(:,:,1));
+title(<span class="string">'Channel 1'</span>)
+colorbar;
+subplot(3, 3, 2), imagesc(org(:,:,2));
+title(<span class="string">'Channel 2'</span>)
+colorbar;
+subplot(3, 3, 3), imagesc(org(:,:,3));
+title(<span class="string">'Channel 3'</span>)
+colorbar;
+subplot(3, 3, 1), imagesc(img_1);
+title(<span class="string">'W = 40; T = 0.01'</span>)
+colorbar;
+subplot(3, 3, 1), imagesc(img_2);
+colorbar;
+subplot(3, 3, 1), imagesc(img_3);
+colorbar;
+subplot(3, 3, 1), imagesc(img2_1);
+title(<span class="string">'Refined'</span>)
+colorbar;
+subplot(3, 3, 1), imagesc(img2_2);
+colorbar;
+subplot(3, 3, 1), imagesc(img2_3);
+colorbar;
+</pre><pre class="codeoutput">Elapsed time is 23.073327 seconds.
+Elapsed time is 40.266218 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_12.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_13.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_14.png" alt=""> <h2>Thorough Analysis of AHE/CLAHE<a name="5"></a></h2><p>Results from the thorough analysis of AHE and CLAHE, run with an exhaustive set of parameters can be found in the link given below. <a href="https://drive.google.com/drive/folders/0B3AJ0qIoMnDsUVU4YkM1blFoSkk?usp=sharing">https://drive.google.com/drive/folders/0B3AJ0qIoMnDsUVU4YkM1blFoSkk?usp=sharing</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q2. Gray Scale Transforms on Images
 % Simple gray scale transforms on images.
@@ -477,7 +651,7 @@ img3 = myAHE(org, 100);
 figure('Position', [100 100 700 700])
 colormap(jet(200));
 subplot(2, 2, 1), imagesc(org);
-title('Original')
+title('Barbara')
 colorbar;
 subplot(2, 2, 2), imagesc(img);
 title('W = 30')
@@ -488,5 +662,157 @@ colorbar;
 subplot(2, 2, 4), imagesc(img3);
 title('W = 100')
 colorbar;
+
+
+org = imread('../data/TEM.png');
+tic
+img = myAHE(org, 35); % Taking relevant window
+toc
+img2 = myAHE(org, 5);
+img3 = myAHE(org, 100);
+
+figure('Position', [100 100 700 700])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title('TEM')
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title('W = 30')
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title('W = 5')
+colorbar;
+subplot(2, 2, 4), imagesc(img3);
+title('W = 100')
+colorbar;
+
+org = imread('../data/canyon.png');
+% Computing AHE independently (Can be incorporated in the function itself, for better results)
+img_1 = myAHE(org(:,:,1), 30);
+img_2 = myAHE(org(:,:,2), 30);
+img_3 = myAHE(org(:,:,3), 30);
+img = cat(3, img_1, img_2, img_3);
+img2_1 = myAHE(org(:,:,1), 5);
+img2_2 = myAHE(org(:,:,2), 5);
+img2_3 = myAHE(org(:,:,3), 5);
+img2 = cat(3, img2_1, img2_2, img2_3);
+img3_1 = myAHE(org(:,:,1), 100);
+img3_2 = myAHE(org(:,:,2), 100);
+img3_3 = myAHE(org(:,:,3), 100);
+img3 = cat(3, img3_1, img3_2, img3_3);
+
+figure('Position', [100 100 1200 700])
+colormap(jet(200));
+
+subplot(3, 4, 1), imshow(img);
+title('W = 30');
+subplot(3, 4, 5), imshow(img2);
+title('W = 30');
+subplot(3, 4, 9), imshow(img3);
+title('W = 30');
+subplot(3, 4, 2), imagesc(img_1);
+colorbar;
+subplot(3, 4, 3), imagesc(img_2);
+colorbar;
+subplot(3, 4, 4), imagesc(img_3);
+colorbar;
+subplot(3, 4, 6), imagesc(img2_1);
+colorbar;
+subplot(3, 4, 7), imagesc(img2_2);
+colorbar;
+subplot(3, 4, 8), imagesc(img2_3);
+colorbar;
+subplot(3, 4, 10), imagesc(img3_1);
+colorbar;
+subplot(3, 4, 11), imagesc(img3_2);
+colorbar;
+subplot(3, 4, 12), imagesc(img3_3);
+colorbar;
+
+%% C. Contrast Limited Adaptive Histogram Equalization
+% <include>myCLAHE.m</include>
+
+
+% Evaluating for the standard images given:
+
+org = imread('../data/barbara.png');
+tic
+img = myCLAHE(org, 40, 0.1); % Taking relevant window and thresholds
+toc
+img2 = myCLAHE(img, 40, 0.05); % Refining the contrast enhancement
+
+figure('Position', [100 100 500 500])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title('Barbara')
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title('W = 40; T = 0.01')
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title('Refined')
+colorbar;
+subplot(2, 2, 4), imshow(img);
+title('After CLAHE')
+
+
+org = imread('../data/TEM.png');
+tic
+img = myCLAHE(org, 40, 0.1); % Taking relevant window and thresholds
+toc
+img2 = myCLAHE(img, 40, 0.05); % Refining the contrast enhancement
+
+figure('Position', [100 100 500 500])
+colormap(jet(200));
+subplot(2, 2, 1), imagesc(org);
+title('TEM')
+colorbar;
+subplot(2, 2, 2), imagesc(img);
+title('W = 40; T = 0.01')
+colorbar;
+subplot(2, 2, 3), imagesc(img2);
+title('Refined')
+colorbar;
+subplot(2, 2, 4), imshow(img);
+title('After CLAHE')
+
+org = imread('../data/canyon.png');
+img_1 = myCLAHE(org(:,:,1), 40, 0.1); % Taking relevant window and thresholds
+img_2 = myCLAHE(org(:,:,2), 40, 0.1);
+img_3 = myCLAHE(org(:,:,3), 40, 0.1);
+
+img2_1 = myCLAHE(img_1, 40, 0.05); % Refining the contrast enhancement
+img2_2 = myCLAHE(img_2, 40, 0.05);
+img2_3 = myCLAHE(img_3, 40, 0.05);
+
+figure('Position', [100 100 1200 700])
+colormap(jet(200));
+subplot(3, 3, 1), imagesc(org(:,:,1));
+title('Channel 1')
+colorbar;
+subplot(3, 3, 2), imagesc(org(:,:,2));
+title('Channel 2')
+colorbar;
+subplot(3, 3, 3), imagesc(org(:,:,3));
+title('Channel 3')
+colorbar;
+subplot(3, 3, 1), imagesc(img_1);
+title('W = 40; T = 0.01')
+colorbar;
+subplot(3, 3, 1), imagesc(img_2);
+colorbar;
+subplot(3, 3, 1), imagesc(img_3);
+colorbar;
+subplot(3, 3, 1), imagesc(img2_1);
+title('Refined')
+colorbar;
+subplot(3, 3, 1), imagesc(img2_2);
+colorbar;
+subplot(3, 3, 1), imagesc(img2_3);
+colorbar;
+
+%% Thorough Analysis of AHE/CLAHE
+% Results from the thorough analysis of AHE and CLAHE, run with an exhaustive set of parameters can be found in the link given below.
+% <https://drive.google.com/drive/folders/0B3AJ0qIoMnDsUVU4YkM1blFoSkk?usp=sharing>
 ##### SOURCE END #####
 --></body></html>

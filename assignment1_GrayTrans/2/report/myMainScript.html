@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Simple gray scale transforms on images. Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li><li><a href="#3">C. Adaptive Histogram Equalization</a></li><li><a href="#4">C. Contrast Limited Adaptive Histogram Equalization</a></li><li><a href="#5">Thorough Analysis of AHE/CLAHE</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
+  </style></head><body><div class="content"><h1>Q2. Gray Scale Transforms on Images</h1><!--introduction--><p>Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar <br> Simple gray scale transforms on images. </p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A. Linear Contrast Stretching</a></li><li><a href="#2">B. Global Histogram Equalization</a></li><li><a href="#3">C. Adaptive Histogram Equalization</a></li><li><a href="#4">C. Contrast Limited Adaptive Histogram Equalization</a></li><li><a href="#5">Thorough Analysis of AHE/CLAHE</a></li></ul></div><h2>A. Linear Contrast Stretching<a name="1"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> img = myLinearContrastStretching(org)
 <span class="comment">% Contrast Enhancement using Linear Contrast Stretching</span>
 <span class="comment">% Maps from current histogram to extended histogram, any aspect ratio</span>

@@ -1,1 +1,0 @@
-function fx = mycdf(x)

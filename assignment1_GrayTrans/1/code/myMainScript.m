@@ -1,8 +1,11 @@
 %% Report for Question 1
+% Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar
 % This question dealt with oversampling ans subsampling images to
 % shrink/expand them. Three methods were chiefly used. Subsampling for
 % shrinking the image, and Bilinear interpolation and Nearest Neighbour
 % interpolation for expanding the image.
+
+
 %% Setting the colormap
 % We have set the colour map with 200 colours, to fit the
 % specifications required in the question
@@ -17,8 +20,8 @@ input_image_1 = imread('../data/circles_concentric.png');
 output_image_1 = myShrinkImageByFactorD(input_image_1, 2);
 output_image_2 = myShrinkImageByFactorD(input_image_1, 3);
 %%
-figure('Position', [0 0 2000 2000]);
-colormap(myColorScale);
+figure('Position', [0 0 1500 1500]);
+colormap(jet(myNumOfColors));
 subplot(1,3,1), imagesc(input_image_1); title('Original Image');
 daspect([1 1 1]);
 colorbar
@@ -37,7 +40,7 @@ input_image_2 = imread('../data/barbaraSmall.png');
 output_image_scaled_1 = myBilinearInterpolation(input_image_2);
 %%
 figure('Position', [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title('Original Image');
 daspect([1 1 1]);
 colorbar
@@ -52,7 +55,7 @@ axis tight;
 % worse at capturing finely changing details of the original, like skin tone.  
 output_image_scaled_2 = myNearestNeighborInterpolation(input_image_2);
 figure('Position', [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title('Original Image');
 daspect([1 1 1]);
 colorbar

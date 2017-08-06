@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Report for Question 1</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-06"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+      --><title>Report for Question 1</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-06"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,13 +66,13 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Report for Question 1</h1><!--introduction--><p>This question dealt with oversampling ans subsampling images to shrink/expand them. Three methods were chiefly used. Subsampling for shrinking the image, and Bilinear interpolation and Nearest Neighbour interpolation for expanding the image.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Setting the colormap</a></li><li><a href="#2">Shrinking images using subsampling</a></li><li><a href="#4">Extension of image using Bilinear Interpolation</a></li><li><a href="#6">Nearest Neighbour Interpolation</a></li></ul></div><h2>Setting the colormap<a name="1"></a></h2><p>We have set the colour map with 200 colours, to fit the specifications required in the question</p><pre class="codeinput">myNumOfColors = 200;
+  </style></head><body><div class="content"><h1>Report for Question 1</h1><!--introduction--><p>Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar. <br> This question dealt with oversampling ans subsampling images to shrink/expand them. Three methods were chiefly used. Subsampling for shrinking the image, and Bilinear interpolation and Nearest Neighbour interpolation for expanding the image.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Setting the colormap</a></li><li><a href="#2">Shrinking images using subsampling</a></li><li><a href="#4">Extension of image using Bilinear Interpolation</a></li><li><a href="#6">Nearest Neighbour Interpolation</a></li></ul></div><h2>Setting the colormap<a name="1"></a></h2><p>We have set the colour map with 200 colours, to fit the specifications required in the question</p><pre class="codeinput">myNumOfColors = 200;
 myColorScale = [ [0:1/(myNumOfColors-1):1]', [0:1/(myNumOfColors-1):1]', [0:1/(myNumOfColors-1):1]'];
-</pre><h2>Shrinking images using subsampling<a name="2"></a></h2><p>The subsampling, done by the function myShrinkImageByFactorD, essentially removes every <img src="myMainScript_eq05604.png" alt="$$ d^{th} $$"> pixel from the rows and columns. They are displayed side by side for reference</p><pre class="codeinput">input_image_1 = imread(<span class="string">'../data/circles_concentric.png'</span>);
+</pre><h2>Shrinking images using subsampling<a name="2"></a></h2><p>The subsampling, done by the function myShrinkImageByFactorD, essentially removes every <img src="myMainScript_eq10716075465034066144.png" alt="$$ d^{th} $$"> pixel from the rows and columns. They are displayed side by side for reference</p><pre class="codeinput">input_image_1 = imread(<span class="string">'../data/circles_concentric.png'</span>);
 output_image_1 = myShrinkImageByFactorD(input_image_1, 2);
 output_image_2 = myShrinkImageByFactorD(input_image_1, 3);
-</pre><pre class="codeinput">figure(<span class="string">'Position'</span>, [0 0 2000 2000]);
-colormap(myColorScale);
+</pre><pre class="codeinput">figure(<span class="string">'Position'</span>, [0 0 1500 1500]);
+colormap(jet(myNumOfColors));
 subplot(1,3,1), imagesc(input_image_1); title(<span class="string">'Original Image'</span>);
 daspect([1 1 1]);
 colorbar
@@ -85,7 +85,7 @@ colorbar
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2>Extension of image using Bilinear Interpolation<a name="4"></a></h2><p>In this section, the myBilinearInterpolation function converts an (M,N) image to a   (3M-2, 2N-1) image, and uses the bilinear interpolation algorithm to fill in the pixels. This has been completely vectorized, completely eliminating loops.</p><pre class="codeinput">input_image_2 = imread(<span class="string">'../data/barbaraSmall.png'</span>);
 output_image_scaled_1 = myBilinearInterpolation(input_image_2);
 </pre><pre class="codeinput">figure(<span class="string">'Position'</span>, [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title(<span class="string">'Original Image'</span>);
 daspect([1 1 1]);
 colorbar
@@ -95,7 +95,7 @@ colorbar
 axis <span class="string">tight</span>;
 </pre><img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <h2>Nearest Neighbour Interpolation<a name="6"></a></h2><p>In this section, the MyNearestNeighbourInterpolation function scales the image according to question specifications, and fills the pixels with the intensity of nearest neighbour. This gives sharper edges, but is worse at capturing finely changing details of the original, like skin tone.</p><pre class="codeinput">output_image_scaled_2 = myNearestNeighborInterpolation(input_image_2);
 figure(<span class="string">'Position'</span>, [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title(<span class="string">'Original Image'</span>);
 daspect([1 1 1]);
 colorbar
@@ -103,13 +103,16 @@ subplot(1,2,2), imagesc(output_image_scaled_2); title(<span class="string">'Neig
 daspect([1 1 1]);
 colorbar
 axis <span class="string">tight</span>;
-</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Report for Question 1
+% Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar
 % This question dealt with oversampling ans subsampling images to
 % shrink/expand them. Three methods were chiefly used. Subsampling for
 % shrinking the image, and Bilinear interpolation and Nearest Neighbour
 % interpolation for expanding the image.
+
+
 %% Setting the colormap
 % We have set the colour map with 200 colours, to fit the
 % specifications required in the question
@@ -124,8 +127,8 @@ input_image_1 = imread('../data/circles_concentric.png');
 output_image_1 = myShrinkImageByFactorD(input_image_1, 2);
 output_image_2 = myShrinkImageByFactorD(input_image_1, 3);
 %%
-figure('Position', [0 0 2000 2000]);
-colormap(myColorScale);
+figure('Position', [0 0 1500 1500]);
+colormap(jet(myNumOfColors));
 subplot(1,3,1), imagesc(input_image_1); title('Original Image');
 daspect([1 1 1]);
 colorbar
@@ -144,7 +147,7 @@ input_image_2 = imread('../data/barbaraSmall.png');
 output_image_scaled_1 = myBilinearInterpolation(input_image_2);
 %%
 figure('Position', [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title('Original Image');
 daspect([1 1 1]);
 colorbar
@@ -159,7 +162,7 @@ axis tight;
 % worse at capturing finely changing details of the original, like skin tone.  
 output_image_scaled_2 = myNearestNeighborInterpolation(input_image_2);
 figure('Position', [100 100 700 700]);
-colormap(myColorScale);
+colormap(jet(myNumOfColors));
 subplot(1,2,1), imagesc(input_image_2); title('Original Image');
 daspect([1 1 1]);
 colorbar

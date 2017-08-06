@@ -40,7 +40,7 @@ subplot(2, 2, 3), imhist(org);
 subplot(2, 2, 4), imhist(img);
 
 % Since the histogram for most of these image was already quite wide, we cannot appreciate the function of the algorithm. Let's look at this image, instead.
-org = imread('satmap.png');
+org = imread('../data/satmap.png');
 img = myLinearContrastStretching(org);
 
 figure('name', 'LinearContrastStretching on SatMap')
@@ -117,7 +117,7 @@ subplot(2, 2, 4), imhist(img);
 
 % Since the histogram for this image was already quite wide, we are unable
 % to appreciate the function of the algorithm. Let's look at this image instead.
-org = imread('satmap.png');
+org = imread('../data/satmap.png');
 img = myHE(org);
 
 figure('name', 'Global HE on SatMap')

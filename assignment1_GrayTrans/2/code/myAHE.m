@@ -10,7 +10,7 @@ orgp(windowsize+1:xp-windowsize, windowsize+1:yp-windowsize) = org;
 img = zeros(size(orgp));
 orgp = mat2gray(orgp);
 
-parfor i = windowsize+1:xp-windowsize
+for i = windowsize+1:xp-windowsize
     for j = windowsize+1:yp-windowsize
         mypdf = imhist(orgp(i-windowsize:i+windowsize, j-windowsize:j+windowsize));
         mypdf = mypdf(2:end); % Removing the border areas. Setting equal to second entry is by arguments of gradient and continuity 

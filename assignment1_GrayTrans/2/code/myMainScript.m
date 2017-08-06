@@ -264,39 +264,18 @@ img2 = myCLAHE(img, 40, 0.05); % Refining the contrast enhancement
 
 figure('Position', [100 100 500 500], 'name', 'Contrast Limited HE on Barbara')
 colormap(jet(200));
-subplot(2, 2, 1), imagesc(org);
+subplot(1, 3, 1), imagesc(org);
 title('Barbara')
 colorbar;
-subplot(2, 2, 2), imagesc(img);
+subplot(1, 3, 2), imagesc(img);
 title('W = 40; T = 0.01')
 colorbar;
-subplot(2, 2, 3), imagesc(img2);
+subplot(1, 3, 3), imagesc(img2);
 title('Refined')
 colorbar;
-subplot(2, 2, 4), imshow(img);
-title('After CLAHE')
 
 
-org = imread('../data/TEM.png');
-tic
-img = myCLAHE(org, 40, 0.1); % Taking relevant window and thresholds
-toc
-img2 = myCLAHE(img, 40, 0.05); % Refining the contrast enhancement
-
-figure('Position', [100 100 500 500], 'name', 'Contrast Limited HE on TEM')
-colormap(jet(200));
-subplot(2, 2, 1), imagesc(org);
-title('TEM')
-colorbar;
-subplot(2, 2, 2), imagesc(img);
-title('W = 40; T = 0.01')
-colorbar;
-subplot(2, 2, 3), imagesc(img2);
-title('Refined')
-colorbar;
-subplot(2, 2, 4), imshow(img);
-title('After CLAHE')
-
+e
 org = imread('../data/canyon.png');
 img_1 = myCLAHE(org(:,:,1), 50, 0.1); % Taking relevant window and thresholds
 img_2 = myCLAHE(org(:,:,2), 50, 0.1);
@@ -306,7 +285,7 @@ img2_1 = myCLAHE(img_1, 50, 0.05); % Refining the contrast enhancement
 img2_2 = myCLAHE(img_2, 50, 0.05);
 img2_3 = myCLAHE(img_3, 50, 0.05);
 
-figure('Position', [100 100 1200 700],  'name', 'Contrast Limited HE on Canyon')
+figure('Position', [100 100 1200 700],  'name', 'Contrast Limited HE on Canyon'
 colormap(jet(200));
 subplot(3, 3, 1), imagesc(org(:,:,1));
 title('Channel 1')

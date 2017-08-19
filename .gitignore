@@ -1,4 +1,4 @@
 *.swp
 experiments/AHE_benchmark/*.png
 assignment1_GrayTrans/2/code/AHE_benchmark/*.png
-
+*~

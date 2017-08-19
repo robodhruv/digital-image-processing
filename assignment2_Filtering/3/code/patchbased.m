@@ -11,6 +11,7 @@ dim = size(img, 1); % 1:1 Aspect ratio assumed
 im_new = img;
 
 for pi = p+1:dim-p
+    disp(pi)
     for pj = p+1:dim-p
         % Iterate over each pixel
         % Window limits also set by the same parameters as we want a fixed

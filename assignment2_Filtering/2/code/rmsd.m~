@@ -1,0 +1,3 @@
+function rmsd = rmsd(img1, img2)
+
+end

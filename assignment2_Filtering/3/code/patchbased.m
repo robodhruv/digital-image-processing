@@ -3,7 +3,7 @@ patchSize = 9;
 windowSize = 25;
 p = (patchSize - 1) / 2;
 w = (windowSize - 1) / 2;
-std = 1; % Standard deviation of the kernel
+std = 40; % Standard deviation of the kernel
 im_new = zeros(size(img));
 
 for pi = p+1:dim-p

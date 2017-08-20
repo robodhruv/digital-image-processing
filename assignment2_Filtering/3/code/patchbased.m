@@ -1,4 +1,4 @@
-function im_new = patchbased(img, std, patchSize, windowSize)
+function im_new = patchbased(img, h, patchSize, windowSize)
 
 
 %patchSize = 9;
@@ -11,7 +11,6 @@ dim = size(img, 1); % 1:1 Aspect ratio assumed
 im_new = img;
 
 for pi = p+1:dim-p
-    disp(pi);
     for pj = p+1:dim-p
         % Iterate over each pixel
         % Window limits also set by the same parameters as we want a fixed
@@ -29,7 +28,7 @@ for pi = p+1:dim-p
                 % This gives a neighboring pixel in the same window
                 patch_q = img(qi-p:qi+p, qj-p:qj+p);
                 patch_centers(count) = img(qi, qj);
-                patch_weights(count) = exp(-1 * sum(sum((patch_p - patch_q).^2)) / (std^2));
+                patch_weights(count) = exp(-1 * sum(sum((patch_p - patch_q).^2)) / (h^2));
             end
         end
         patch_weights = patch_weights / sum(patch_weights);

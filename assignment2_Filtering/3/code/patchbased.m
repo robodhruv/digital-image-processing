@@ -1,9 +1,11 @@
+function im_new = patchbased(img, std)
+
 dim = size(img, 1); % 1:1 Aspect ratio assumed
 patchSize = 9;
 windowSize = 25;
 p = (patchSize - 1) / 2;
 w = (windowSize - 1) / 2;
-std = 40; % Standard deviation of the kernel
+% std = 40; % Standard deviation of the kernel
 im_new = zeros(size(img));
 
 for pi = p+1:dim-p
@@ -31,4 +33,5 @@ for pi = p+1:dim-p
         patch_weights = patch_weights / sum(patch_weights);
         im_new(pi, pj) = sum(patch_weights.*patch_centers);
     end
+end
 end

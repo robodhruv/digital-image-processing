@@ -1,4 +1,4 @@
-function im_new = bilinear_filter(img, std)
+function im_new = myBilinearFilter(img, std)
 
 img_trunc = ceil(img);
 img_trunc = img_trunc + (img_trunc==0);

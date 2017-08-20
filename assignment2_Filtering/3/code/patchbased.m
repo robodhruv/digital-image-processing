@@ -1,12 +1,14 @@
-function im_new = patchbased(img, std)
+function im_new = patchbased(img, std, patchSize, windowSize)
 
-dim = size(img, 1); % 1:1 Aspect ratio assumed
-patchSize = 9;
-windowSize = 25;
+
+%patchSize = 9;
+%windowSize = 25;
 p = (patchSize - 1) / 2;
 w = (windowSize - 1) / 2;
 % std = 40; % Standard deviation of the kernel
-im_new = zeros(size(img));
+
+dim = size(img, 1); % 1:1 Aspect ratio assumed
+im_new = img;
 
 for pi = p+1:dim-p
     disp(pi);

@@ -5,8 +5,8 @@ img = img.imageOrig;
 noise = randn(size(img, 1)) * 0.05 * max(max(img));
 imgn = max(0, img+noise);
 
-sx = [3:2:18];
-sr = [3:2:18];
+sx = [10:0.2:12];
+sr = [4:0.2:6];
 logger = zeros([numel(sx) numel(sr) 2]);
 for x = 1:numel(sx)
 	for r = 1:numel(sr)

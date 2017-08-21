@@ -1,6 +1,9 @@
 function im_new = myBilinearFilter(img, std)
 
-img_trunc = ceil(img);
+% Scaling image in color space to 100 intensities
+imgs = img / max(max(img)) * 100
+img_trunc = ceil(imgs);
+
 img_trunc = img_trunc + (img_trunc==0);
 space = zeros([size(img, 1), size(img, 2), max(max(img_trunc))]);
 void_space = zeros(size(space));

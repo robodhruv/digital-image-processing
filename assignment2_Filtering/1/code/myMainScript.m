@@ -1,6 +1,5 @@
 
-% <include>myUnsharpMasking.m</include>
-% <include>myLinearContrastStretching.m</include>
+%<include>myUnsharpMasking.m</include>
 
 lion_img=load('../data/lionCrop');
 lion_img=lion_img.imageOrig;
@@ -9,7 +8,7 @@ scaling=0.8;
 tic;
 lion_output=myUnsharpMasking(lion_img,std,scaling);
 toc;
-figure('name','UnsharpMasking on lionCrop');
+figure('name','UnsharpMasking on lionCrop', 'Position', [100 100 1300 500]);
 colormap(gray);
 subplot(1,2,1),imshow(myLinearContrastStretching(lion_img));
 colorbar
@@ -25,7 +24,7 @@ tic;
 moon_output=myUnsharpMasking(moon_img,std,scaling);
 toc;
 
-figure('name','UnsharpMasking on moonCrop');
+figure('name','UnsharpMasking on moonCrop','Position', [100 100 1300 500]);
 colormap(gray);
 subplot(1,2,1),imshow(myLinearContrastStretching(moon_img));
 colorbar

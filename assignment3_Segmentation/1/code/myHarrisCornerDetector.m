@@ -10,18 +10,18 @@ length=(window_size-1)/2;
 
 [Gx,Gy]=imgradientxy(img,'sobel');
 
-Ix=Gx.*Gx;
-Iy=Gy.*Gy;
+Ix2=Gx.*Gx;
+Iy2=Gy.*Gy;
 Ixy=Gx.*Gy;
 
 
-output_Ix=imgaussfilt(Ix,std2,'Filtersize',5);
-output_Iy=imgaussfilt(Iy,std2,'Filtersize',5);
+output_Ix2=imgaussfilt(Ix2,std2,'Filtersize',5);
+output_Iy2=imgaussfilt(Iy2,std2,'Filtersize',5);
 output_Ixy=imgaussfilt(Ixy,std2,'Filtersize',5);
 
 
-Trace=output_Ix.^2+output_Iy.^2;
-Det=(output_Ix.^2).*(output_Iy.^2)-(output_Ixy.^2);
+Trace=output_Ix2 +output_Iy2 ;
+Det=(output_Ix2).*(output_Iy2)-(output_Ixy.^2);
 
 
 %Eigen Values for 2-D Matrices
@@ -30,7 +30,7 @@ output_eig_max=(Trace/2) +((Trace/2).^2 - Det).^(1/2);
 
 
 %Harris-Corner Detector
-thresh = 0.001;
+thresh = 0.006;
 corner_detected=output_eig_min.*output_eig_max - k*(output_eig_min+output_eig_max).^2;
 corner_detected(corner_detected<thresh)=0;
 

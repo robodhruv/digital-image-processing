@@ -10,8 +10,8 @@ img=img.imageOrig;
 img=img/max(max(img));
 
 std1=0.05;
-k=0.11;
-std2=0.7;
+k=0.182;
+std2=0.5;
 img=imgaussfilt(img,std1);
 
 tic;
@@ -45,6 +45,6 @@ title('Harris Cornerness');
 subplot(1,2,2),imshow(final);colorbar;
 title('Detected Corners');
 
-{'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.7, 0.11}
+{'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.5, 0.182}
 
 

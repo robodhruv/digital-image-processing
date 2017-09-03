@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Q1. Harris Corner Detection</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-09-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Q1. Harris Corner Detection</h1><!--introduction--><p>Corner detection on images. Done by Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Harris Corner Detector</a></li></ul></div><h2>Harris Corner Detector<a name="1"></a></h2><pre class="language-matlab">
+<span class="keyword">function</span> [final,Gx,Gy,corner_detected,output_eig_min,output_eig_max]= myHarrisCornerDetector(img,std2,k)
+img = img - min(min(img));
+img = img / max(max(img));
+
+x_dim=size(img,1);
+y_dim=size(img,2);
+
+window_size=5;
+length=(window_size-1)/2;
+
+[Gx,Gy]=imgradientxy(img,<span class="string">'sobel'</span>);
+
+Ix=Gx.*Gx;
+Iy=Gy.*Gy;
+Ixy=Gx.*Gy;
+
+
+output_Ix=imgaussfilt(Ix,std2,<span class="string">'Filtersize'</span>,5);
+output_Iy=imgaussfilt(Iy,std2,<span class="string">'Filtersize'</span>,5);
+output_Ixy=imgaussfilt(Ixy,std2,<span class="string">'Filtersize'</span>,5);
+
+
+Trace=output_Ix.^2+output_Iy.^2;
+Det=(output_Ix.^2).*(output_Iy.^2)-(output_Ixy.^2);
+
+
+<span class="comment">%Eigen Values for 2-D Matrices</span>
+output_eig_min=(Trace/2)-((Trace/2).^2 - Det).^(1/2);
+output_eig_max=(Trace/2) +((Trace/2).^2 - Det).^(1/2);
+
+
+<span class="comment">%Harris-Corner Detector</span>
+thresh = 0.001;
+corner_detected=output_eig_min.*output_eig_max - k*(output_eig_min+output_eig_max).^2;
+corner_detected(corner_detected&lt;thresh)=0;
+
+<span class="comment">%Non-maximal suppression</span>
+<span class="keyword">for</span> i=2:2:x_dim-2
+    <span class="keyword">for</span> j=2:2:y_dim-2
+        corner_detected(i-1:i+1,j-1:j+1)=(corner_detected(i-1:i+1,j-1:j+1)==<span class="keyword">...</span>
+            max(max(corner_detected(i-1:i+1,j-1:j+1))))*max(max(corner_detected(i-1:i+1,j-1:j+1)));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Inserting Markers</span>
+[row,col]=find(corner_detected&gt;0);
+marker=cat(2,col,row);
+final=insertMarker(img,marker,<span class="string">'color'</span>,<span class="string">'green'</span>, <span class="string">'Size'</span>, 3);
+
+</pre><pre class="codeinput">img=load(<span class="string">'../data/boat.mat'</span>);
+img=img.imageOrig;
+img=img/max(max(img));
+
+std1=0.05;
+k=0.11;
+std2=0.7;
+img=imgaussfilt(img,std1);
+
+tic;
+[final,Gx,Gy,corner_detected,output_eig_min,output_eig_max]=myHarrisCornerDetector(img,std2,k);
+toc;
+
+<span class="comment">%Gradient along X and Gradient along Y, using the 'Sobel' operator</span>
+
+figure(<span class="string">'name'</span>,<span class="string">'ImageDerivatives'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
+colormap(<span class="string">'gray'</span>);
+subplot(1,2,1),imshow(Gx);
+title(<span class="string">'X Gradient'</span>);
+subplot(1,2,2),imshow(Gy);
+title(<span class="string">'Y Gradient'</span>);
+
+<span class="comment">%Minimum and Maximum Eigen-Value</span>
+
+figure(<span class="string">'name'</span>,<span class="string">'EigenValues'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
+colormap(<span class="string">'gray'</span>);
+subplot(1,2,1),imshow(output_eig_min);colorbar;
+title(<span class="string">'Minimum EigenValue'</span>);
+subplot(1,2,2),imshow(output_eig_max);colorbar;
+title(<span class="string">'Maximum Eigen Value'</span>);
+
+<span class="comment">%Cornerness and Markers on the Final Image</span>
+
+figure(<span class="string">'name'</span>,<span class="string">'HarrisCornerDetector'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
+colormap(<span class="string">'gray'</span>);
+subplot(1,2,1),imshow(corner_detected);colorbar;
+title(<span class="string">'Harris Cornerness'</span>);
+subplot(1,2,2),imshow(final);colorbar;
+title(<span class="string">'Detected Corners'</span>);
+
+{<span class="string">'Std_for_Smotheening'</span>, <span class="string">'Std_for_Harris_Detection'</span>, <span class="string">'k'</span>; 0.05, 0.7, 0.11}
+</pre><pre class="codeoutput">Elapsed time is 0.728364 seconds.
+
+ans = 
+
+    'Std_for_Smotheening'    'Std_for_Harris_De...'      'k'     
+    [             0.0500]    [              0.7000]    [0.1100]
+
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" style="width:1300px;height:500px;" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" style="width:1300px;height:500px;" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" style="width:1300px;height:500px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Q1. Harris Corner Detection
+% Corner detection on images.
+% Done by Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah.
+%% Harris Corner Detector
+% <include>myHarrisCornerDetector.m</include>
+
+
+img=load('../data/boat.mat');
+img=img.imageOrig;
+img=img/max(max(img));
+
+std1=0.05;
+k=0.11;
+std2=0.7;
+img=imgaussfilt(img,std1);
+
+tic;
+[final,Gx,Gy,corner_detected,output_eig_min,output_eig_max]=myHarrisCornerDetector(img,std2,k);
+toc;
+
+%Gradient along X and Gradient along Y, using the 'Sobel' operator
+
+figure('name','ImageDerivatives','Position', [100 100 1300 500]);
+colormap('gray');
+subplot(1,2,1),imshow(Gx);
+title('X Gradient');
+subplot(1,2,2),imshow(Gy);
+title('Y Gradient');
+
+%Minimum and Maximum Eigen-Value
+
+figure('name','EigenValues','Position', [100 100 1300 500]);
+colormap('gray');
+subplot(1,2,1),imshow(output_eig_min);colorbar;
+title('Minimum EigenValue');
+subplot(1,2,2),imshow(output_eig_max);colorbar;
+title('Maximum Eigen Value');
+
+%Cornerness and Markers on the Final Image
+
+figure('name','HarrisCornerDetector','Position', [100 100 1300 500]);
+colormap('gray');
+subplot(1,2,1),imshow(corner_detected);colorbar;
+title('Harris Cornerness');
+subplot(1,2,2),imshow(final);colorbar;
+title('Detected Corners');
+
+{'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.7, 0.11}
+
+
+
+##### SOURCE END #####
+--></body></html>

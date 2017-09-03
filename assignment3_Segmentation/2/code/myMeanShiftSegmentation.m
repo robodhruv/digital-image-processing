@@ -1,6 +1,6 @@
-function [out] = myMeanShiftSegmentation( input_image )
+function [out, outc10, outc20] = myMeanShiftSegmentation(input_image, hs, hc, iter)
 % Gaussian smoothing, with window-size 5 (Covers +/- 3sigma), sigma = 1 pixel width
-hs = 5; hc = 0.15;
+
 smooth_filter = fspecial('gaussian', [7 7], 1);
 I = im2double(input_image);
 smoothed = imfilter(I, smooth_filter, 'conv');
@@ -12,7 +12,7 @@ out = I;
 I = padarray(I, [3*hs 3*hs]);
 %row_dim = ones(4*hs+1,1);
 %col_dim = ones(4*hs+1,1);
-for k=1:30
+for k=1:iter
 for i = 3*hs+1:rows + 3*hs
 	for j = 3*hs+1:cols + 3*hs
 		A = I(i-3*hs:i+3*hs,j-3*hs:j+3*hs,1:3);
@@ -29,5 +29,6 @@ for i = 3*hs+1:rows + 3*hs
     end
 end
 end
+outc10 = round(out * 8) / 8;
+outc20 = round(out * 15) / 20;
 end
-

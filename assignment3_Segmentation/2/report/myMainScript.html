@@ -1,0 +1,210 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Q2. MeanShift Segmentation</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-09-03"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Q2. MeanShift Segmentation</h1><!--introduction--><p>Dhanvi Sreenivasan, Dhruv Ilesh Shah and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">myMeanShiftSegmentation.m</a></li><li><a href="#2">Results</a></li><li><a href="#3">Analysis</a></li><li><a href="#4">Parameters</a></li><li><a href="#5">Other Results</a></li></ul></div><h2>myMeanShiftSegmentation.m<a name="1"></a></h2><pre class="language-matlab">
+<span class="keyword">function</span> [out, outc10, outc20] = myMeanShiftSegmentation(input_image, hs, hc, iter)
+<span class="comment">% Gaussian smoothing, with window-size 5 (Covers +/- 3sigma), sigma = 1 pixel width</span>
+
+smooth_filter = fspecial(<span class="string">'gaussian'</span>, [7 7], 1);
+I = im2double(input_image);
+smoothed = imfilter(I, smooth_filter, <span class="string">'conv'</span>);
+I = smoothed(1:2:end,1:2:end,:);
+s = size(I); rows = s(1); cols = s(2);
+space_gaussian = fspecial(<span class="string">'gaussian'</span>, [6*hs+1 6*hs+1], hs);
+out = I;
+<span class="comment">%s_g3d = cat(3,space_gaussian,space_gaussian,space_gaussian);</span>
+I = padarray(I, [3*hs 3*hs]);
+<span class="comment">%row_dim = ones(4*hs+1,1);</span>
+<span class="comment">%col_dim = ones(4*hs+1,1);</span>
+<span class="keyword">for</span> k=1:iter
+<span class="keyword">for</span> i = 3*hs+1:rows + 3*hs
+	<span class="keyword">for</span> j = 3*hs+1:cols + 3*hs
+		A = I(i-3*hs:i+3*hs,j-3*hs:j+3*hs,1:3);
+		<span class="comment">%B = mat2cell(A, row_dim, col_dim, 3);</span>
+		int_i = out(i-3*hs,j-3*hs,:);
+        B = (bsxfun(@minus,A,int_i)).^2;
+        G = exp(-1.*sum(B,3)./(hc*hc));
+        G = G.*space_gaussian;
+        G3d = cat(3,G,G,G);
+        Z = A.*G3d;
+        Gx = G(max(1,6*hs+2-i):min(end,rows+6*hs+1-i),max(1,6*hs+2-j):min(end,cols+6*hs+1-j));
+        update = sum(reshape(Z,[],size(Z,3)))/sum(Gx(:));
+        out(i-3*hs,j-3*hs,:) = update;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+outc10 = round(out * 8) / 8;
+outc20 = round(out * 15) / 20;
+<span class="keyword">end</span>
+
+</pre><h2>Results<a name="2"></a></h2><pre class="codeinput">img = imread(<span class="string">'../data/baboonColor.png'</span>);
+tic;
+[out, outc10, outc20] = myMeanShiftSegmentation(img, 10, 0.08, 17);
+toc
+figure(<span class="string">'name'</span>, <span class="string">'Mean-Shift Segmentation'</span>, <span class="string">'Position'</span>, [100 100 900 900])
+subplot(2,2,1), imshow(img);
+title(<span class="string">'Original Image'</span>);
+subplot(2,2,2), imshow(out);
+title(<span class="string">'Output of Mean-Shift Clustering (15 iter)'</span>);
+subplot(2, 2, 3), imshow(outc10);
+title(<span class="string">'Image Color Coded with Bin Size 10'</span>);
+subplot(2, 2, 4), imshow(outc20);
+title(<span class="string">'Image Color Coded with Bin Size 20'</span>);
+daspect([1 1 1])
+</pre><pre class="codeoutput">Elapsed time is 283.916617 seconds.
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2>Analysis<a name="3"></a></h2><p>The output of the mean-shift need not have converged completely at the end of a fixed number of iterations, and including an epsilon bound check may take an unbounded amount of time to converge. Hence the output shown may still have some finite gradients. To get rid of that, we use naive binning approach to obtain a simple color coded scheme (was not required, but to emphasise the compression that can be achieved).</p><pre class="codeinput"><span class="comment">% The total number of unique colors can be obtained as follows.</span>
+
+unique_colors = unique(outc10(:,:,1) + 2*(outc10(:,:,2)) + 4*(outc10(:,:,3)));
+c = numel(unique_colors)
+
+<span class="comment">% Thus the color space of the image can now be represented using log(c)</span>
+<span class="comment">% bits, instead of 8*3 bits.</span>
+</pre><pre class="codeoutput">
+c =
+
+    40
+
+</pre><h2>Parameters<a name="4"></a></h2><p>The above output was obtained at the parameters given below.</p><pre class="codeinput">{<span class="string">'h_s'</span>, <span class="string">'h_c'</span>, <span class="string">'iter'</span>; 10, 0.08, 17}
+</pre><pre class="codeoutput">
+ans = 
+
+    'h_s'    'h_c'       'iter'
+    [ 10]    [0.0800]    [  17]
+
+</pre><h2>Other Results<a name="5"></a></h2><p>The obtained result does look well segmented, without much loss of detailing of features. Since there can not be a clear demarcation of what the "correct" parameters are, here are some other outputs that we got for the problem.</p><pre class="codeinput">img = imread(<span class="string">'../images/BaboonSmall_15_0.1.png'</span>);
+figure, imshow(img);
+title(<span class="string">'h_s = 15; h_c = 0.1; 30 iterations'</span>)
+
+img = imread(<span class="string">'../images/baboonSmall_50_5_0.2.png'</span>);
+figure, imshow(img);
+title(<span class="string">'h_s = 5; h_c = 0.2; 50 iterations'</span>)
+<span class="comment">% This output is highly smudged on the outside, but the inner features are</span>
+<span class="comment">% well demarcated.</span>
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Q2. MeanShift Segmentation
+% Dhanvi Sreenivasan, Dhruv Ilesh Shah and Bhavesh Thakkar
+
+%% myMeanShiftSegmentation.m
+% <include>myMeanShiftSegmentation.m</include>
+
+%% Results
+
+img = imread('../data/baboonColor.png');
+tic;
+[out, outc10, outc20] = myMeanShiftSegmentation(img, 10, 0.08, 17);
+toc
+figure('name', 'Mean-Shift Segmentation', 'Position', [100 100 900 900])
+subplot(2,2,1), imshow(img);
+title('Original Image');
+subplot(2,2,2), imshow(out);
+title('Output of Mean-Shift Clustering (15 iter)');
+subplot(2, 2, 3), imshow(outc10);
+title('Image Color Coded with Bin Size 10');
+subplot(2, 2, 4), imshow(outc20);
+title('Image Color Coded with Bin Size 20');
+daspect([1 1 1])
+
+%% Analysis
+% The output of the mean-shift need not have converged completely at the
+% end of a fixed number of iterations, and including an epsilon bound check may
+% take an unbounded amount of time to converge. Hence the output shown may
+% still have some finite gradients. To get rid of that, we use naive
+% binning approach to obtain a simple color coded scheme (was not required,
+% but to emphasise the compression that can be achieved).
+
+% The total number of unique colors can be obtained as follows.
+
+unique_colors = unique(outc10(:,:,1) + 2*(outc10(:,:,2)) + 4*(outc10(:,:,3)));
+c = numel(unique_colors)
+
+% Thus the color space of the image can now be represented using log(c)
+% bits, instead of 8*3 bits.
+
+%% Parameters
+% The above output was obtained at the parameters given below.
+{'h_s', 'h_c', 'iter'; 10, 0.08, 17}
+
+%% Other Results
+% The obtained result does look well segmented, without much loss of
+% detailing of features. Since there can not be a clear demarcation of what
+% the "correct" parameters are, here are some other outputs that we got for
+% the problem.
+
+img = imread('../images/BaboonSmall_15_0.1.png');
+figure, imshow(img);
+title('h_s = 15; h_c = 0.1; 30 iterations')
+
+img = imread('../images/baboonSmall_50_5_0.2.png');
+figure, imshow(img);
+title('h_s = 5; h_c = 0.2; 50 iterations')
+% This output is highly smudged on the outside, but the inner features are
+% well demarcated.
+##### SOURCE END #####
+--></body></html>

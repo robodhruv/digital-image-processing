@@ -21,28 +21,31 @@ toc;
 %Gradient along X and Gradient along Y, using the 'Sobel' operator
 
 figure('name','ImageDerivatives','Position', [100 100 1300 500]);
-colormap('gray');
 subplot(1,2,1),imshow(Gx);
+colormap(gray);
 title('X Gradient');
 subplot(1,2,2),imshow(Gy);
+colormap(gray);
 title('Y Gradient');
 
 %Minimum and Maximum Eigen-Value
 
 figure('name','EigenValues','Position', [100 100 1300 500]);
-colormap('gray');
-subplot(1,2,1),imshow(output_eig_min);colorbar;
+subplot(1,2,1),imshow(output_eig_min/max(max(output_eig_min)));colorbar;
+colormap(jet);
 title('Minimum EigenValue');
 subplot(1,2,2),imshow(output_eig_max);colorbar;
+colormap(jet);
 title('Maximum Eigen Value');
 
 %Cornerness and Markers on the Final Image
 
 figure('name','HarrisCornerDetector','Position', [100 100 1300 500]);
-colormap('gray');
-subplot(1,2,1),imshow(corner_detected);colorbar;
+ax1=subplot(1,2,1),imshow(corner_detected/max(max(corner_detected)));colorbar;
+colormap(ax1,jet);
 title('Harris Cornerness');
-subplot(1,2,2),imshow(final);colorbar;
+ax2=subplot(1,2,2),imshow(final);colorbar;
+colormap(ax2,gray);
 title('Detected Corners');
 
 {'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.5, 0.182}

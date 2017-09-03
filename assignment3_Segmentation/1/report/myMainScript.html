@@ -79,18 +79,18 @@ length=(window_size-1)/2;
 
 [Gx,Gy]=imgradientxy(img,<span class="string">'sobel'</span>);
 
-Ix=Gx.*Gx;
-Iy=Gy.*Gy;
+Ix2=Gx.*Gx;
+Iy2=Gy.*Gy;
 Ixy=Gx.*Gy;
 
 
-output_Ix=imgaussfilt(Ix,std2,<span class="string">'Filtersize'</span>,5);
-output_Iy=imgaussfilt(Iy,std2,<span class="string">'Filtersize'</span>,5);
+output_Ix2=imgaussfilt(Ix2,std2,<span class="string">'Filtersize'</span>,5);
+output_Iy2=imgaussfilt(Iy2,std2,<span class="string">'Filtersize'</span>,5);
 output_Ixy=imgaussfilt(Ixy,std2,<span class="string">'Filtersize'</span>,5);
 
 
-Trace=output_Ix.^2+output_Iy.^2;
-Det=(output_Ix.^2).*(output_Iy.^2)-(output_Ixy.^2);
+Trace=output_Ix2 +output_Iy2 ;
+Det=(output_Ix2).*(output_Iy2)-(output_Ixy.^2);
 
 
 <span class="comment">%Eigen Values for 2-D Matrices</span>
@@ -99,7 +99,7 @@ output_eig_max=(Trace/2) +((Trace/2).^2 - Det).^(1/2);
 
 
 <span class="comment">%Harris-Corner Detector</span>
-thresh = 0.001;
+thresh = 0.006;
 corner_detected=output_eig_min.*output_eig_max - k*(output_eig_min+output_eig_max).^2;
 corner_detected(corner_detected&lt;thresh)=0;
 
@@ -121,8 +121,8 @@ img=img.imageOrig;
 img=img/max(max(img));
 
 std1=0.05;
-k=0.11;
-std2=0.7;
+k=0.182;
+std2=0.5;
 img=imgaussfilt(img,std1);
 
 tic;
@@ -132,37 +132,70 @@ toc;
 <span class="comment">%Gradient along X and Gradient along Y, using the 'Sobel' operator</span>
 
 figure(<span class="string">'name'</span>,<span class="string">'ImageDerivatives'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
-colormap(<span class="string">'gray'</span>);
 subplot(1,2,1),imshow(Gx);
+colormap(gray);
 title(<span class="string">'X Gradient'</span>);
 subplot(1,2,2),imshow(Gy);
+colormap(gray);
 title(<span class="string">'Y Gradient'</span>);
 
 <span class="comment">%Minimum and Maximum Eigen-Value</span>
 
 figure(<span class="string">'name'</span>,<span class="string">'EigenValues'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
-colormap(<span class="string">'gray'</span>);
-subplot(1,2,1),imshow(output_eig_min);colorbar;
+subplot(1,2,1),imshow(output_eig_min/max(max(output_eig_min)));colorbar;
+colormap(jet);
 title(<span class="string">'Minimum EigenValue'</span>);
 subplot(1,2,2),imshow(output_eig_max);colorbar;
+colormap(jet);
 title(<span class="string">'Maximum Eigen Value'</span>);
 
 <span class="comment">%Cornerness and Markers on the Final Image</span>
 
 figure(<span class="string">'name'</span>,<span class="string">'HarrisCornerDetector'</span>,<span class="string">'Position'</span>, [100 100 1300 500]);
-colormap(<span class="string">'gray'</span>);
-subplot(1,2,1),imshow(corner_detected);colorbar;
+ax1=subplot(1,2,1),imshow(corner_detected/max(max(corner_detected)));colorbar;
+colormap(ax1,jet);
 title(<span class="string">'Harris Cornerness'</span>);
-subplot(1,2,2),imshow(final);colorbar;
+ax2=subplot(1,2,2),imshow(final);colorbar;
+colormap(ax2,gray);
 title(<span class="string">'Detected Corners'</span>);
 
-{<span class="string">'Std_for_Smotheening'</span>, <span class="string">'Std_for_Harris_Detection'</span>, <span class="string">'k'</span>; 0.05, 0.7, 0.11}
-</pre><pre class="codeoutput">Elapsed time is 0.728364 seconds.
+{<span class="string">'Std_for_Smotheening'</span>, <span class="string">'Std_for_Harris_Detection'</span>, <span class="string">'k'</span>; 0.05, 0.5, 0.182}
+</pre><pre class="codeoutput">Elapsed time is 0.851922 seconds.
+
+ax1 = 
+
+  Axes with properties:
+
+             XLim: [0 1]
+             YLim: [0 1]
+           XScale: 'linear'
+           YScale: 'linear'
+    GridLineStyle: '-'
+         Position: [0.1300 0.1100 0.3347 0.8150]
+            Units: 'normalized'
+
+  Use GET to show all properties
+
+
+ax2 = 
+
+  Axes with properties:
+
+             XLim: [0 1]
+             YLim: [0 1]
+           XScale: 'linear'
+           YScale: 'linear'
+    GridLineStyle: '-'
+         Position: [0.5703 0.1100 0.3347 0.8150]
+            Units: 'normalized'
+
+  Use GET to show all properties
+
 
 ans = 
 
     'Std_for_Smotheening'    'Std_for_Harris_De...'      'k'     
-    [             0.0500]    [              0.7000]    [0.1100]
+    [             0.0500]    [              0.5000]    [0.1820]
 
 </pre><img vspace="5" hspace="5" src="myMainScript_01.png" style="width:1300px;height:500px;" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" style="width:1300px;height:500px;" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" style="width:1300px;height:500px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
@@ -178,8 +211,8 @@ img=img.imageOrig;
 img=img/max(max(img));
 
 std1=0.05;
-k=0.11;
-std2=0.7;
+k=0.182;
+std2=0.5;
 img=imgaussfilt(img,std1);
 
 tic;
@@ -189,31 +222,34 @@ toc;
 %Gradient along X and Gradient along Y, using the 'Sobel' operator
 
 figure('name','ImageDerivatives','Position', [100 100 1300 500]);
-colormap('gray');
 subplot(1,2,1),imshow(Gx);
+colormap(gray);
 title('X Gradient');
 subplot(1,2,2),imshow(Gy);
+colormap(gray);
 title('Y Gradient');
 
 %Minimum and Maximum Eigen-Value
 
 figure('name','EigenValues','Position', [100 100 1300 500]);
-colormap('gray');
-subplot(1,2,1),imshow(output_eig_min);colorbar;
+subplot(1,2,1),imshow(output_eig_min/max(max(output_eig_min)));colorbar;
+colormap(jet);
 title('Minimum EigenValue');
 subplot(1,2,2),imshow(output_eig_max);colorbar;
+colormap(jet);
 title('Maximum Eigen Value');
 
 %Cornerness and Markers on the Final Image
 
 figure('name','HarrisCornerDetector','Position', [100 100 1300 500]);
-colormap('gray');
-subplot(1,2,1),imshow(corner_detected);colorbar;
+ax1=subplot(1,2,1),imshow(corner_detected/max(max(corner_detected)));colorbar;
+colormap(ax1,jet);
 title('Harris Cornerness');
-subplot(1,2,2),imshow(final);colorbar;
+ax2=subplot(1,2,2),imshow(final);colorbar;
+colormap(ax2,gray);
 title('Detected Corners');
 
-{'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.7, 0.11}
+{'Std_for_Smotheening', 'Std_for_Harris_Detection', 'k'; 0.05, 0.5, 0.182}
 
 
 

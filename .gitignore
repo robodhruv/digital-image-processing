@@ -13,3 +13,4 @@ experiments/pbl_benchmark/*
 *.pdf
 *.bbl
 *.blg
+*.gz

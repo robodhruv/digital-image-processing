@@ -4,3 +4,12 @@ assignment1_GrayTrans/2/code/AHE_benchmark/*.png
 experiments/bilateral_benchmark/*
 experiments/pbl_benchmark/*
 *~
+
+# Latex Extras
+*.out
+*.dvi
+*.log
+*.aux
+*.pdf
+*.bbl
+*.blg

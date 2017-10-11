@@ -102,7 +102,29 @@ Clearly, $f$ must be an eigen vector of $C$, with eigenvalue $\mu$. Substituting
 	\implies Au_i \norm{A^Tv_i}_2 = \lambda v_i
 	\end{equation}
 	Thus, we have $Au_i = \gamma_i v_i$, where $\gamma_i = \frac{\lambda}{\norm{A^Tv_i}_2} \geq 0$.
-	\item 
+	\item From above, we have $Au_i = \gamma_iv_i$. Using the definition of the matrices $U = [v_1|v_2|\ldots|v_n]$ and $V = [u_1|u_2|\ldots|u_n]$, we see that
+	\begin{equation}
+	AV = [Au_1|Au_2|\ldots|Au_n] = [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]
+	\label{eq:svd-AV}
+	\end{equation}
+	Thus, we have $AV = \Gamma U$, where $\Gamma = diag(\gamma_1, \gamma_2, \ldots, \gamma_n)$. Looking at right-hand side, we have
+	\begin{align}
+	&\Gamma U = [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]	 \\
+	\implies & U^T\Gamma U = [v_1|v_2|\ldots|v_n]^T [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]
+	\shortintertext{Since $v_i$ are orthonormal, we have}
+	& U^T\Gamma U = diag(\gamma_1 v_1^2 | \gamma_2 v_2^2) | \ldots | \gamma_n v_n^2) = \Gamma
+	\label{eq:svd-Gamma}
+	\end{align}
+	Putting together Eqns. \ref{eq:svd-AV} \& \ref{eq:svd-Gamma}, we get
+	\begin{align}
+	U^TAV = U^T\Gamma U = \Gamma \\
+	\shortintertext{Thus, multiplying on left with $U$ and right with $V^T$, we get}
+	UU^TAVV^T = U\Gamma V^T
+	\end{align}
+	But, we have $UU^T = VV^T = I$ and hence we get the required result
+	\begin{equation}
+	A = U\Gamma V^T
+	\end{equation}
 \end{enumerate}
 
 

@@ -1,0 +1,135 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>myMainScript</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-11"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">MyMainScript</a></li><li><a href="#2">PCA/SVD Testing on ORL Database</a></li><li><a href="#3">SVD Testing of Cropped Yale Dataset</a></li><li><a href="#4">Plotting all the results below</a></li></ul></div><h2>MyMainScript<a name="1"></a></h2><pre class="codeinput">tic;
+</pre><h2>PCA/SVD Testing on ORL Database<a name="2"></a></h2><p>Array of testing values for k Instead of recalculating U for each k, calculating for 170, then considering only first k vectors</p><pre class="codeinput">k = [1 2 3 5 10 15 20 30 50 75 100 150 170];
+
+[U_pca, alpha_pca, Average] = myPCADatabasing(170);
+
+recRateOrl_pca = arrayfun(@(x) myPCAChecker(U_pca(:,1:x), alpha_pca(1:x,:), Average), k);
+
+[U_svd, alpha_svd,~] = mySVDDatabasing(170);
+recRateOrl_svd = arrayfun(@(x) mySVDChecker(U_svd(:,1:x), alpha_svd(1:x,:), Average), k);
+</pre><h2>SVD Testing of Cropped Yale Dataset<a name="3"></a></h2><p>Finding in one shot both probability percentages with and without top 3 eigencoefficients</p><pre class="codeinput">k1 = [1 2 3 5 10 15 20 30 50 75 100 200 300 500 1000];
+[U_yale, alpha_yale, Avg_yale] = mySVDYaleDatabasing(1000);
+[recRateAll, recRateIllumInv] = arrayfun(@(x) mySVDYaleChecker(U_yale(:,1:x), alpha_yale(1:x,:), Avg_yale), k1);
+
+toc;
+</pre><pre class="codeoutput">Elapsed time is 91.949506 seconds.
+</pre><h2>Plotting all the results below<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Plot of PCA and SVD on ORL Database</span>
+figure;
+subplot(2,1,1); plot(k, recRateOrl_pca); title(<span class="string">'PCA on ORL'</span>);
+subplot(2,1,2); plot(k, recRateOrl_svd); title(<span class="string">'SVD on ORL'</span>);
+
+<span class="comment">% Plot of SVD on Yale, comparing with and without top 3 eigenfaces</span>
+figure;
+plot(k1, recRateAll);
+hold <span class="string">on</span>;
+plot(k1, recRateIllumInv);
+title(<span class="string">'SVD on Yale Dataset Results'</span>);
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MyMainScript
+
+tic;
+%% PCA/SVD Testing on ORL Database
+% Array of testing values for k
+% Instead of recalculating U for each k, calculating for 170, then considering only first k vectors 
+
+k = [1 2 3 5 10 15 20 30 50 75 100 150 170];
+
+[U_pca, alpha_pca, Average] = myPCADatabasing(170);
+
+recRateOrl_pca = arrayfun(@(x) myPCAChecker(U_pca(:,1:x), alpha_pca(1:x,:), Average), k); 
+
+[U_svd, alpha_svd,~] = mySVDDatabasing(170);
+recRateOrl_svd = arrayfun(@(x) mySVDChecker(U_svd(:,1:x), alpha_svd(1:x,:), Average), k);
+%% SVD Testing of Cropped Yale Dataset
+% Finding in one shot both probability percentages with and without top 3
+% eigencoefficients
+
+k1 = [1 2 3 5 10 15 20 30 50 75 100 200 300 500 1000];
+[U_yale, alpha_yale, Avg_yale] = mySVDYaleDatabasing(1000);
+[recRateAll, recRateIllumInv] = arrayfun(@(x) mySVDYaleChecker(U_yale(:,1:x), alpha_yale(1:x,:), Avg_yale), k1);
+
+toc;
+%% Plotting all the results below
+
+% Plot of PCA and SVD on ORL Database
+figure;
+subplot(2,1,1); plot(k, recRateOrl_pca); title('PCA on ORL');
+subplot(2,1,2); plot(k, recRateOrl_svd); title('SVD on ORL');
+
+% Plot of SVD on Yale, comparing with and without top 3 eigenfaces
+figure; 
+plot(k1, recRateAll);
+hold on;
+plot(k1, recRateIllumInv);
+title('SVD on Yale Dataset Results');
+##### SOURCE END #####
+--></body></html>

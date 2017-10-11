@@ -1,8 +1,6 @@
-
-n [U,S,V] = mysvd(A)
-    %% A = USV'
-        % AA' = US2U'
-        % A'A = VS2V'
+function [U,S,V] = mySVD(A)
+%% This function computes the singular value decomposition of the matrix A
+% by computing the eigen value decomposition of AA' and A'A.
     A1 = A*A';
     A2 = A'*A;
     P1 = eye(size(A));

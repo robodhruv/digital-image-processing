@@ -1,6 +1,5 @@
-function [ hit_rate, hit_ratet ] = mySVDYaleChecker( k )
+function [ hit_rate, hit_ratet ] = mySVDYaleChecker( Vk, alphak, Average )
 
-[V, alpha, Average] = mySVDYaleDatabasing(k);
 s = '../../../CroppedYale/';
 B = dir(s);
 B = B(3:end);
@@ -12,7 +11,7 @@ for i=1:38
     D = D(3:end);
     for j=41:60
         f = im2double(imread(strcat(s,B(i).name,'/',D(j).name)));
-        [index, indext] = mySVDYaleTesting(f, V, alpha, Average);
+        [index, indext] = mySVDYaleTesting(f, Vk, alphak, Average);
         total = total + 1;
         if index  == i
             count = count + 1;
@@ -24,7 +23,5 @@ for i=1:38
 end
 hit_rate = count / total;
 hit_ratet = countt/total;
-if k == 0
-    hit_rate = 0;
 end
 

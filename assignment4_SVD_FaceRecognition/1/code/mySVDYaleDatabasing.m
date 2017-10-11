@@ -1,4 +1,4 @@
-function [U,alpha, Average] = mySVDYaleDatabasing( k )
+function [U,alpha, Average] = mySVDYaleDatabasing(kmax)
 
 s = '../../../CroppedYale/';
 B = dir(s);
@@ -20,7 +20,7 @@ X = bsxfun(@minus, A, Average);
 [~, permutation] = sort(diag(S), 'descend');
 %S = S(permutation, permutation);
 U = U(:, permutation);
-U = U(:,1:k);
+U = U(:,1:kmax);
 n = sum(U.^2,1);
 U = bsxfun(@rdivide, U, n);
 alpha = U'*X;

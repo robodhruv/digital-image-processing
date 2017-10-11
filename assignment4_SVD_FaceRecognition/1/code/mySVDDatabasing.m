@@ -1,4 +1,4 @@
-function [ U, alpha,Average ] = mySVDDatabasing( k )
+function [ U, alpha,Average ] = mySVDDatabasing( kmax )
 
 s = '../../../att_faces/s';
 f = im2double(imread(strcat(s,int2str(1),'/',int2str(1),'.pgm')));
@@ -20,7 +20,7 @@ X = bsxfun(@minus, A, Average);
 [~, permutation] = sort(diag(S), 'descend');
 S = S(permutation, permutation);
 U = U(:, permutation);
-U = U(:, 1:k);
+U = U(:, 1:kmax);
 n = sum(U.^2,1);
 U = bsxfun(@rdivide, U, n);
 alpha = U'*X;

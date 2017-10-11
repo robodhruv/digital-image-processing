@@ -1,4 +1,4 @@
-function [V, alpha, Average] = myPCADatabasing(k)
+function [V, alpha, Average] = myPCADatabasing(kmax)
 
 s = '../../../att_faces/s';
 f = im2double(imread(strcat(s,int2str(1),'/',int2str(1),'.pgm')));
@@ -21,8 +21,9 @@ L = X'*X;
 [~, permutation] = sort(diag(D), 'descend');
 %D = D(permutation, permutation);
 W = W(:, permutation);
-W = W(:, 1:k);
+W = W(:, 1:kmax);
 V = X*W;
 n = sqrt(sum(V.^2,1));
 V = bsxfun(@rdivide, V, n);
 alpha = V'*X;
+end

@@ -1,12 +1,12 @@
-function [U,alpha, A,Average, B] = mySVDYaleDatabasing( k )
+function [U,alpha, Average] = mySVDYaleDatabasing( k )
 
 s = '../../../CroppedYale/';
 B = dir(s);
-B = B(3:end,:);
+B = B(3:end);
 A = zeros(192*168, 1);  
 for i=1:38
     D = dir(strcat(s,B(i).name));
-    D = D(3:end, :);
+    D = D(3:end);
     for j = 1:40
         f = im2double(imread(strcat(s,B(i).name,'/',D(j).name)));
         f = f(:);

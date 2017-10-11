@@ -1,0 +1,192 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Q3. Detecting False Positives and Negatives</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-12"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Q3. Detecting False Positives and Negatives</h1><!--introduction--><p>Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Method</a></li><li><a href="#2">Code to determine false positives and negatives</a></li></ul></div><h2>Method<a name="1"></a></h2><p>We define a threshold such that if least distance between the eigen coefficients of the test image and that of the the images in the database is greater than the the threshold then we report that no match has taken place. And if the least distance is less than the threshold then we report a match has taken place. While determining the threshold, here we have assumed that we only have the data of 32 people initially. We found the least distances of images which were detected correctly(hits) and those which weren't detected correctly(misses) from the test set of 32*4 images We defined threshold to be (mean(least_distances of hits) + mean(least_distances of misses))/2 We can tune the threshold better by considering images that are not in our training data, and use the value of the distance obtained to set the threshold such that majority of those distances are more than the threshold.</p><pre class="codeinput">tic;
+</pre><h2>Code to determine false positives and negatives<a name="2"></a></h2><pre class="codeinput">k=25
+[thresh, U, alpha, avg] = myThresh(25); <span class="comment">%We choose the top 25 singular values</span>
+s = <span class="string">'../../../att_faces/s'</span>;
+
+<span class="comment">% None of the below images have a corresponding image in the training set so</span>
+<span class="comment">% therefore if we have the least distance of the test image less than threshold, then it is</span>
+<span class="comment">% a false positive</span>
+
+false_positive = 0;
+<span class="keyword">for</span> i=33:40
+    <span class="keyword">for</span> j=1:10
+        f = im2double(imread(strcat(s,int2str(i),<span class="string">'/'</span>,int2str(j),<span class="string">'.pgm'</span>)));
+        [least_distance, index] = myPCATesting(f, U, alpha, avg);
+        <span class="keyword">if</span> least_distance &lt; thresh
+            false_positive = false_positive + 1;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+false_negative = 0;
+
+<span class="keyword">for</span> i=1:32
+    <span class="keyword">for</span> j=7:10
+        f = im2double(imread(strcat(s,int2str(i),<span class="string">'/'</span>,int2str(j),<span class="string">'.pgm'</span>)));
+        [least_distance, index] = myPCATesting(f, U, alpha, avg);
+        <span class="keyword">if</span> index  == i
+            <span class="comment">% We get a match but are forced to reject it due to least distance being greater than threshold</span>
+            <span class="comment">% Hence, false_negative</span>
+            <span class="keyword">if</span> least_distance &gt; thresh
+             false_negative = false_negative + 1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+false_positive
+false_negative
+
+
+toc;
+</pre><pre class="codeoutput">
+k =
+
+    25
+
+
+false_positive =
+
+     7
+
+
+false_negative =
+
+    19
+
+Elapsed time is 2.543569 seconds.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Q3. Detecting False Positives and Negatives
+% Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah
+
+%% Method 
+% We define a threshold such that if least distance between the eigen
+% coefficients of the test image and that of the the images in the database
+% is greater than the the threshold then we report that no match has taken
+% place. And if the least distance is less than the threshold then we
+% report a match has taken place.
+% While determining the threshold, here we have assumed that we only have the data of 32
+% people initially. We found the least distances of images which were
+% detected correctly(hits) and those which weren't detected correctly(misses) from the
+% test set of 32*4 images
+% We defined threshold to be
+% (mean(least_distances of hits) + mean(least_distances of misses))/2
+% We can tune the threshold better by considering images that are not in our
+% training data, and use the value of the distance obtained to set the
+% threshold such that majority of those distances are more than the
+% threshold.
+
+tic;
+%% Code to determine false positives and negatives
+k=25
+[thresh, U, alpha, avg] = myThresh(25); %We choose the top 25 singular values
+s = '../../../att_faces/s';
+
+% None of the below images have a corresponding image in the training set so
+% therefore if we have the least distance of the test image less than threshold, then it is
+% a false positive
+
+false_positive = 0;
+for i=33:40
+    for j=1:10
+        f = im2double(imread(strcat(s,int2str(i),'/',int2str(j),'.pgm')));
+        [least_distance, index] = myPCATesting(f, U, alpha, avg);
+        if least_distance < thresh
+            false_positive = false_positive + 1;
+        end
+    end
+end
+
+false_negative = 0;
+
+for i=1:32
+    for j=7:10
+        f = im2double(imread(strcat(s,int2str(i),'/',int2str(j),'.pgm')));
+        [least_distance, index] = myPCATesting(f, U, alpha, avg);
+        if index  == i 
+            % We get a match but are forced to reject it due to least distance being greater than threshold
+            % Hence, false_negative
+            if least_distance > thresh
+             false_negative = false_negative + 1;
+            end
+        end
+    end
+end
+
+false_positive
+false_negative
+
+
+toc;
+
+##### SOURCE END #####
+--></body></html>

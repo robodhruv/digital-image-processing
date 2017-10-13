@@ -1,0 +1,132 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>myMainScript</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-13"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Q3. Notch Filter</a></li><li><a href="#2">Log-plot of the Fourier Transform</a></li><li><a href="#3">Identifying Noise</a></li><li><a href="#4">Ideal Notch Filter</a></li></ul></div><h2>Q3. Notch Filter<a name="1"></a></h2><p>Author: Dhruv Ilesh Shah</p><pre class="codeinput">close <span class="string">all</span>
+load(<span class="string">'data/image_low_frequency_noise.mat'</span>);
+</pre><h2>Log-plot of the Fourier Transform<a name="2"></a></h2><pre class="codeinput">Fimg = fft2(Z);
+Fimg_shifted = fftshift(Fimg);
+Flog = log(abs(Fimg_shifted));
+figure, imagesc(Flog)
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2>Identifying Noise<a name="3"></a></h2><p>For this part, we run impixelinfo on the log-Fourier of the image and notice two abnormal peaks as shown below</p><pre class="codeinput">noisy_f = [124, 119; 134, 139]; <span class="comment">% Observed</span>
+viscircles(noisy_f, [5; 5]);
+</pre><img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <h2>Ideal Notch Filter<a name="4"></a></h2><p>We see that the noise frequencies are almost pure (single-pixel) impulses, and we use an ideal cross-hair notch of pixel-size 2-3</p><pre class="codeinput">noisy_sub = sub2ind(size(Fimg_shifted), noisy_f(:, 2), noisy_f(:, 1));
+notch_filter = ones(size(Fimg_shifted));
+notch_filter(noisy_sub) = 0;
+se = strel(<span class="string">'disk'</span>, 1, 4);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se); <span class="comment">% A simple trick to circular notch</span>
+
+Fimg_rec = Fimg_shifted.*notch_filter; <span class="comment">% Setting the noisy frequencies to zero</span>
+img_rec = ifft2(ifftshift(Fimg_rec));
+
+figure(<span class="string">'Position'</span>, [100, 100, 1000, 500])
+subplot(1, 2, 1), imshow(mat2gray(Z));
+subplot(1, 2, 2), imshow(mat2gray(img_rec));
+</pre><img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Q3. Notch Filter
+% Author: Dhruv Ilesh Shah
+
+close all
+load('data/image_low_frequency_noise.mat');
+
+%% Log-plot of the Fourier Transform
+
+Fimg = fft2(Z);
+Fimg_shifted = fftshift(Fimg);
+Flog = log(abs(Fimg_shifted));
+figure, imagesc(Flog)
+
+%% Identifying Noise
+% For this part, we run impixelinfo on the log-Fourier of the image and
+% notice two abnormal peaks as shown below
+
+noisy_f = [124, 119; 134, 139]; % Observed
+viscircles(noisy_f, [5; 5]);
+
+%% Ideal Notch Filter
+% We see that the noise frequencies are almost pure (single-pixel) impulses,
+% and we use an ideal cross-hair notch of pixel-size 2-3
+
+noisy_sub = sub2ind(size(Fimg_shifted), noisy_f(:, 2), noisy_f(:, 1));
+notch_filter = ones(size(Fimg_shifted));
+notch_filter(noisy_sub) = 0;
+se = strel('disk', 1, 4);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se); % A simple trick to circular notch
+
+Fimg_rec = Fimg_shifted.*notch_filter; % Setting the noisy frequencies to zero
+img_rec = ifft2(ifftshift(Fimg_rec));
+
+figure('Position', [100, 100, 1000, 500])
+subplot(1, 2, 1), imshow(mat2gray(Z));
+subplot(1, 2, 2), imshow(mat2gray(img_rec));
+##### SOURCE END #####
+--></body></html>

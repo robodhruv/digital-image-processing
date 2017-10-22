@@ -1,29 +1,30 @@
-image = imread('../data/barbara256-part.png');
+image = imread('../data/barbara256.png');
 image = double(image);
 noisy_image = image + randn(size(image))*20;
 
 patch_size = 7;
 sigma=20;
 p = (patch_size-1)/2;
-
+tic
 %Compute the Matrix of patches
-patch_matrix = zeros(49,1);
+patch_matrix = zeros(49,(size(image,1)-(patch_size-1))^2);
+alpha_matrix_denoised = zeros(49,(size(image,1)-(patch_size-1))^2);
+count =1;
 for i = p+1 : size(noisy_image,1) - p
     for j =  p+1 : size(noisy_image,1) - p
         
-        patch_p = noisy_image([i-p : i+p],[j-p:j+p]);
-        patch_matrix = [patch_matrix,patch_p(:)];
+        patch_p = noisy_image(i-p : i+p,j-p:j+p);
+        patch_matrix(:,count) = patch_p(:);
+        count=count+1;
         
     end
 end
-patch_matrix = patch_matrix( :,2:end);
 
 %Compute the eigencoefficients of patches
-alpha_martrix_denoised = zeros(size(patch_matrix));
 covariance_matrix = patch_matrix*patch_matrix';
 [V, D] = eig(covariance_matrix);
-[~, permutation] = sort(diag(D), 'descend');
-V = V(:, permutation);
+%[~, permutation] = sort(diag(D), 'descend');
+%V = V(:, permutation);
 n = sqrt(sum(V.^2,1));
 V = bsxfun(@rdivide, V, n);
 alpha = V'*patch_matrix;
@@ -46,19 +47,19 @@ counter = zeros(size(noisy_image));
 %Reconstructing the image from patches
 count = 1;
 for i = p+1 : size(noisy_image,1) - p
-    for j =  p+1 : size(noisy_image,1) - p
-        filtered_image([i-p : i+p],[j-p:j+p]) = ...
-            filtered_image([i-p : i+p],[j-p:j+p]) + reshape(patch_matrix_denoised(:,count), [7 7]);
-            counter([i-p : i+p],[j-p:j+p])=counter([i-p : i+p],[j-p:j+p]) + 1;
+    for j =  p+1 : size(noisy_image,2) - p
+        filtered_image(i-p : i+p,j-p:j+p) = ...
+            filtered_image(i-p : i+p,j-p:j+p) + reshape(patch_matrix_denoised(:,count), [7 7]);
+            counter(i-p : i+p,j-p:j+p)=counter(i-p : i+p,j-p:j+p) + 1;
             %counter(i,j) keeps track of number of patches that have visited a pixel (i,j) 
             count = count +1;
     end
 end
 
 filtered_image=filtered_image./counter;
-imshow(filtered_image,[])
-
-
+imshow(filtered_image,[]);
+MSE = sum(sum( (image-filtered_image).^2 ))/(size(image,1)*size(image,2))
+toc
         
 
 

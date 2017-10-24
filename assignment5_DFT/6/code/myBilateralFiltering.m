@@ -24,15 +24,12 @@ B = imgaussfilt3(space, std);
 B1 = imgaussfilt3(void_space, std);
 B = B ./ B1;
 im_new = zeros(size(img));
-max(max(max(B1)))
-max(max(max(B)))
 % disp(size(B));
 for i = 1:size(img, 1)
     for j = 1:size(img, 2)
         im_new(i, j) = B(i, j, img_trunc(i, j));
     end
 end
-max(max(im_new))
 end
 
 

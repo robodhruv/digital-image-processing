@@ -10,7 +10,6 @@ filtered_image = zeros(size(noisy_image));
 counter = zeros(size(noisy_image));
 
 
-tic
 %Outer two for loops to go to each pixel, inner two foor loops to find
 %closest patch to reference patch
 for i = w+p+1 : size(noisy_image,1) - w -p
@@ -62,4 +61,3 @@ end
 
 filtered_image=filtered_image./counter;
 filtered_image= filtered_image(w+1:size(noisy_image,1)-w,w+1:size(noisy_image,2)-w);
-toc

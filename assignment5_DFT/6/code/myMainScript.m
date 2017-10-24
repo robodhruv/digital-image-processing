@@ -47,11 +47,11 @@ title(strcat('Global PCA denoising. MSE = ', num2str(MSE1)))
 
 subplot (3,2,4);
 imshow(img2,[]);
-title(strcat('Global PCA denoising. MSE = ', num2str(MSE2)))
+title(strcat('PCA denoising with L = 200. MSE = ', num2str(MSE2)))
 
 subplot (3,2,5);
 imshow(img2,[]);
-title(strcat('Global PCA denoising. MSE = ', num2str(MSE3)))
+title(strcat('Bilateral Filtering. MSE = ', num2str(MSE3)))
 
 %% Differences between Bilateral and PCA
 % 6)c)

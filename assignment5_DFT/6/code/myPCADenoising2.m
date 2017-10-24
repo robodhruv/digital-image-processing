@@ -1,19 +1,18 @@
-image = imread('../data/barbara256.png');
-image = double(image);
+function [filtered_image] = myPCADenoising2(image)
+
 patch_size=7;
 p = (patch_size-1)/2;
 sigma = 20;
 window_size = 31;
 w = (window_size - 1 )/2;
-noisy_image = image + randn(size(image))*20;
-noisy_image = padarray(noisy_image,[w w],inf,'both');
-
+noisy_image = padarray(image,[w w],inf,'both');
 filtered_image = zeros(size(noisy_image));
 counter = zeros(size(noisy_image));
 
 
 tic
-
+%Outer two for loops to go to each pixel, inner two foor loops to find
+%closest patch to reference patch
 for i = w+p+1 : size(noisy_image,1) - w -p
     for j =  w+p+1 : size(noisy_image,2) - w -p 
         original_patch=noisy_image(i-p:i+p,j-p:j+p);
@@ -27,7 +26,7 @@ for i = w+p+1 : size(noisy_image,1) - w -p
                 count = count +1;
             end
         end
-        %mse = patch_matrix-repmat(original_patch,1,size(patch_matrix,2));
+        
         mse = bsxfun(@minus,patch_matrix,original_patch);
         mse = sum((mse.^2),1);
         [values, permutation] = sort( mse, 'ascend');
@@ -38,6 +37,9 @@ for i = w+p+1 : size(noisy_image,1) - w -p
         %1st one corresoponds to original patch
         patch_matrix=patch_matrix(:,2:topk+1);
         
+        %Constructing the covariance matrix, denoising the image and then
+        %reconstructing it
+        
         covariance_matrix = patch_matrix*patch_matrix';
         [V, D] = eig(covariance_matrix);
         n = sqrt(sum(V.^2,1));
@@ -45,9 +47,12 @@ for i = w+p+1 : size(noisy_image,1) - w -p
         original_alpha = V'*original_patch;
         alpha = V'*patch_matrix;
         L = size(alpha,2);
+        %Denoising the eigencoefficients
+        
         denoised_alpha = original_alpha./(1 + sigma^2./(max(0 ,(1/L)*(sum((alpha.^2),2)) - sigma^2)));
         denoised_patch=V*denoised_alpha;
- 
+        %Updating the pixel values
+        
         filtered_image(i-p : i+p,j-p:j+p) = ...
             filtered_image(i-p : i+p,j-p:j+p) + reshape(denoised_patch, [7 7]);
         counter(i-p : i+p,j-p:j+p)=counter(i-p : i+p,j-p:j+p) + 1;
@@ -57,6 +62,4 @@ end
 
 filtered_image=filtered_image./counter;
 filtered_image= filtered_image(w+1:size(noisy_image,1)-w,w+1:size(noisy_image,2)-w);
-imshow(filtered_image,[]);
-MSE = sum(sum( (image-filtered_image).^2 ))/(size(image,1)*size(image,2))
 toc

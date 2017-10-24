@@ -1,19 +1,20 @@
-image = imread('../data/barbara256.png');
-image = double(image);
-noisy_image = image + randn(size(image))*20;
+function [filtered_image] = myPCADenoising1(image)
 
-patch_size = 7;
-sigma=20;
+patch_size=7;
 p = (patch_size-1)/2;
-tic
+sigma = 20;
+window_size = 31;
+w = (window_size - 1 )/2;
+
+
 %Compute the Matrix of patches
 patch_matrix = zeros(49,(size(image,1)-(patch_size-1))^2);
 alpha_matrix_denoised = zeros(49,(size(image,1)-(patch_size-1))^2);
 count =1;
-for i = p+1 : size(noisy_image,1) - p
-    for j =  p+1 : size(noisy_image,1) - p
+for i = p+1 : size(image,1) - p
+    for j =  p+1 : size(image,1) - p
         
-        patch_p = noisy_image(i-p : i+p,j-p:j+p);
+        patch_p = image(i-p : i+p,j-p:j+p);
         patch_matrix(:,count) = patch_p(:);
         count=count+1;
         
@@ -41,13 +42,13 @@ end
 %Reonstructing pixel values from denoised eigencoeffiecient
 patch_matrix_denoised = V*alpha_matrix_denoised;
 
-filtered_image = zeros(size(noisy_image));
-counter = zeros(size(noisy_image));
+filtered_image = zeros(size(image));
+counter = zeros(size(image));
 
 %Reconstructing the image from patches
 count = 1;
-for i = p+1 : size(noisy_image,1) - p
-    for j =  p+1 : size(noisy_image,2) - p
+for i = p+1 : size(image,1) - p
+    for j =  p+1 : size(image,2) - p
         filtered_image(i-p : i+p,j-p:j+p) = ...
             filtered_image(i-p : i+p,j-p:j+p) + reshape(patch_matrix_denoised(:,count), [7 7]);
             counter(i-p : i+p,j-p:j+p)=counter(i-p : i+p,j-p:j+p) + 1;
@@ -57,13 +58,4 @@ for i = p+1 : size(noisy_image,1) - p
 end
 
 filtered_image=filtered_image./counter;
-imshow(filtered_image,[]);
-MSE = sum(sum( (image-filtered_image).^2 ))/(size(image,1)*size(image,2))
-toc
-        
-
-
-
-
-        
         

@@ -1,0 +1,131 @@
+\title{\bf CS 663 -- Assignment 4}
+\author{\emph{Dhruv Ilesh Shah, Bhavesh Thakkar and Dhanvi Sreenivasan}}
+\date{}
+
+\documentclass[11pt]{article}
+\pagenumbering{gobble}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[margin=0.4in]{geometry}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{enumitem}
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item {\bf Consider a set of $N$ vectors $\mathcal{X} = \{\boldsymbol{x_1}, \boldsymbol{x_2}, ..., \boldsymbol{x_N}\}$ each in $\mathbb{R}^d$, with average vector $\boldsymbol{\bar{x}}$. We have seen in class that the direction $\boldsymbol{e}$ such that $\sum_{i=1}^N \|\boldsymbol{x_i}-\boldsymbol{\bar{x}}-(\boldsymbol{e} \cdot (\boldsymbol{x_i}-\boldsymbol{\bar{x}}))\boldsymbol{e}\|^2$ is minimized, is obtained by maximizing $\boldsymbol{e}^t \boldsymbol{C} \boldsymbol{e}$, where $\boldsymbol{C}$ is the covariance matrix of the vectors in $\mathcal{X}$. This vector $\boldsymbol{e}$ is the eigenvector of matrix $\boldsymbol{C}$ with the highest eigenvalue. Prove that the direction $\boldsymbol{f}$ perpendicular to $\boldsymbol{e}$ for which $\boldsymbol{f}^t \boldsymbol{C} \boldsymbol{f}$ is maximized, is the eigenvector of $\boldsymbol{C}$ with the second highest eigenvalue. For simplicity, assume that all non-zero eigenvalues of $\boldsymbol{C}$ are distinct and that $\textrm{rank}(\boldsymbol{C}) > 2$.}
+
+{\em Solution:}
+\vspace*{1em}
+
+\hspace*{1em}We need to identify a direction $f$ that maximizes $f^TCf$, given that $f$ is perpendicular to a $e$ ($f^Te = e^Tf = 0$), where $e$ is the eigenvector of $C$ corresponding to the largest eigenvalue. We approach this problem by using the tool of Lagrange multipliers. The system constraints are as given below
+
+\begin{equation}
+\begin{split}
+f^Tf &= 1 \\
+f^Te &= 1
+\end{split}
+\end{equation}
+We define $L$, the function to be optimized, as follows
+\begin{equation}
+\label{eq:lag-full}
+L(f, \lambda, \mu) = f^TCf + \lambda f^Te + \mu(f^Tf - 1)
+\end{equation}
+Differentiating $L$ with respect to $f$ and setting the gradient to $0$ gives us the following relation in $(\mu, \lambda)$
+\begin{equation}
+\frac{\partial L(f, \lambda, \mu)}{\partial f} = L_f(f, \lambda, \mu) = 2Cf + \lambda e + 2\mu f = 0
+\end{equation}
+This follows from the fact that $\frac{\partial}{\partial a}a^TXa = 2Xa$ for square matrix $X$ and column vector $a$, $\frac{\partial}{\partial a}a^Ta = 2a$ for a column vector $a$ and $\frac{\partial}{\partial a}a^Tb = b$ for column vectors $a, b$.\\
+\hspace*{1em} From Eqn. \ref{eq:lag-full}, we must compute $\mu, \lambda$ such that $L_f(f, \lambda, \mu) = 0$. Multiplying left with $e^T$, we get
+\begin{align}
+2e^TCf + \lambda e^Te + 2\mu e^Tf = 0 \\
+\shortintertext{$e^te = 1,\;\;\;e^Tf = 0$}
+2e^TCf + \lambda = 0 \\
+\lambda = 2e^TCf = 2f^TC^Te \\
+\shortintertext{Since $C$ is the covariance matrix, $C = C^T$:}
+\lambda = 2f^TCe = 0
+\end{align}
+Thus, we have $\lambda = 0$ and hence we can compute $\mu$ from Eqn. \ref{eq:lag-full} as follows
+\begin{equation}
+\mu f = Cf
+\end{equation}
+Clearly, $f$ must be an eigen vector of $C$, with eigenvalue $\mu$. Substituting, we get $f^TCf = \mu$, and this is maximal at the largest eigenvalue (not corresponding to the eigenvalue of $e$, say $\lambda_e$ since we have $e^Tf=0$). Since $\lambda_e$ is known to be the largest eigenvalue, the $f$ maximising $f^TCf$ under the given constraints is thus the eigenvector corresponding to the second largest eigenvalue, say $\lambda_f$.
+
+\newpage
+\item {\bf Consider a matrix $\boldsymbol{A}$ of size $m \times n$. Define $\boldsymbol{P} = \boldsymbol{A}^T \boldsymbol{A}$ and $\boldsymbol{Q} = \boldsymbol{A}\boldsymbol{A}^T$. (Note: all matrices, vectors and scalars involved in this question are real-valued).}
+\begin{enumerate}
+\item Prove that for any vector $\boldsymbol{y}$ with appropriate number of elements, we have $\boldsymbol{y}^t \boldsymbol{Py} \geq 0$. Similarly show that $\boldsymbol{z}^t \boldsymbol{Qz} \geq 0$ for a vector $\boldsymbol{z}$ with appropriate number of elements. Why are the eigenvalues of $\boldsymbol{P}$ and $\boldsymbol{Q}$ non-negative?
+\item If $\boldsymbol{u}$ is an eigenvector of $\boldsymbol{P}$ with eigenvalue $\lambda$, show that $\boldsymbol{Au}$ is an eigenvector of $\boldsymbol{Q}$ with eigenvalue $\lambda$. If $\boldsymbol{v}$ is an eigenvector of $\boldsymbol{Q}$ with eigenvalue $\mu$, show that $\boldsymbol{A}^T\boldsymbol{v}$ is an eigenvector of $\boldsymbol{P}$ with eigenvalue $\mu$. What will be the number of elements in $\boldsymbol{u}$ and $\boldsymbol{v}$?
+
+\item If $\boldsymbol{v}_i$ is an eigenvector of $\boldsymbol{Q}$ and we define $\boldsymbol{u}_i \triangleq \dfrac{\boldsymbol{A}^T \boldsymbol{v}_i}{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2}$. Then prove that there will exist some real, non-negative $\gamma_i$ such that $\boldsymbol{Au}_i = \gamma_i \boldsymbol{v}_i$.
+
+\item It can be shown that $\boldsymbol{u}^T_i \boldsymbol{u}_j = 0$ for $i \neq j$ and likewise $\boldsymbol{v}^T_i \boldsymbol{v}_j = 0$ for $i \neq j$ for correspondingly distinct eigenvalues.\footnote{This follows because $\boldsymbol{P}$ and $\boldsymbol{Q}$ are symmetric matrices. Consider $\boldsymbol{Pu}_1 = \lambda_1 \boldsymbol{u}_1$ and $\boldsymbol{Pu}_2 = \lambda_2 \boldsymbol{u}_2$. Then $\boldsymbol{u}^T_2 \boldsymbol{P u}_1 = \lambda_1 \boldsymbol{u}^T_2 \boldsymbol{u}_1$. But $\boldsymbol{u}^T_2 \boldsymbol{P} \boldsymbol{u}_1$ also equal to $(\boldsymbol{P}^T \boldsymbol{u}_2)^T \boldsymbol{u}_1 = (\boldsymbol{P} \boldsymbol{u}_2)^T \boldsymbol{u}_1 = (\lambda_2 \boldsymbol{u}_2)^T \boldsymbol{u}_1 = \lambda_2 \boldsymbol{u}^T_2 \boldsymbol{u}_1$. Hence $\lambda_2 \boldsymbol{u}^T_2 \boldsymbol{u}_1 = \lambda_1 \boldsymbol{u}^T_2 \boldsymbol{u}_1$. Since $\lambda_2 \neq \lambda_1$, we must have $\boldsymbol{u}^T_2 \boldsymbol{u}_1 = 0$. }. Now, define $\boldsymbol{U} = [\boldsymbol{v}_1 | \boldsymbol{v}_2 | \boldsymbol{v}_3 | ...|\boldsymbol{v}_m]$ and $\boldsymbol{V} = [\boldsymbol{u}_1 | \boldsymbol{u}_2 | \boldsymbol{u}_3 | ... |\boldsymbol{u}_n]$. Now show that $\boldsymbol{A} = \boldsymbol{U} \boldsymbol{\Gamma} \boldsymbol{V}^T$ where $\boldsymbol{\Gamma}$ is a diagonal matrix containing the non-negative values $\gamma_1, \gamma_2, ..., \gamma_n$. With this, you have just established the existence of the singular value decomposition of any matrix $\boldsymbol{A}$. This is a key result in linear algebra and it is widely used in image processing, computer vision, computer graphics, statistics, machine learning, numerical analysis, natural language processing and data mining.
+\end{enumerate}
+\end{enumerate}
+
+{\em Solution:}
+\vspace*{1em}
+
+\begin{enumerate}[label=(\alph*), leftmargin=3\parindent]
+	\item For any appropriate vector $y$, we have
+	\begin{equation}
+	y^TPy = y^TA^TAy = (Ay)^TAy
+	\end{equation}
+	Thus, the required quantity $y^tPy$ is nothing but the norm of the vector $Ay$, and since the norm is always positive (square root of sum of squared elements). Similary for $Q$ we have $z^tQz = \norm{A^Tz} \geq 0$.
+
+	To prove the next part, let us consider an eigenvector $e$ of $P$. Then $e$ satisfies $Pe = \lambda e$ for some $\lambda$ (its eigenvalue). Multiplying on the left with $e^T$ gives
+	\begin{equation}
+	e^TPe = \lambda e^Te = \lambda
+	\end{equation}
+	Now, $e^Te$ can be chosen to be 1 (unit eigenvector), or any positive value, and hence we get $\lambda \geq 0$. This holds for every symmetric matrix, hence for $Q$.
+	\item If $u$ is an eigenvector of $P$ with eigenvalue $\lambda$, we have
+	\begin{align}
+	 & Pu = \lambda u \\
+	\implies& A^TAu = \lambda u
+	\shortintertext{Multiplying on left with $A$:}
+	\implies& (AA^T)Au = \lambda Au
+	\end{align}
+	Thus, $Au$ is an eigenvector of $AA^T = Q$ with eigenvalue $\lambda$. Similarly for an eigenvector $v$ of $Q$ with eigenvalue $\mu$, we get
+	\begin{align}
+	 & Qv = \mu v \\
+	\implies& AA^Tv = \mu v
+	\shortintertext{Multiplying on left with $A^T$:}
+	\implies& (A^TA)A^Tv = \mu A^Tv
+	\end{align}
+	Thus, $P = A^TA$ has eigenvector $v$ with an eigenvalue $\mu$.
+	\item Given that $v_i$ is an eigenvector of $Q$, we have $Qv_i = AA^Tv_i = \lambda v_i$ for some $\lambda$. Clearly, we can write this as
+	\begin{equation}
+	A(A^Tv_i) = \lambda v_i \\
+	\implies Au_i \norm{A^Tv_i}_2 = \lambda v_i
+	\end{equation}
+	Thus, we have $Au_i = \gamma_i v_i$, where $\gamma_i = \frac{\lambda}{\norm{A^Tv_i}_2} \geq 0$.
+	\item From above, we have $Au_i = \gamma_iv_i$. Using the definition of the matrices $U = [v_1|v_2|\ldots|v_n]$ and $V = [u_1|u_2|\ldots|u_n]$, we see that
+	\begin{equation}
+	AV = [Au_1|Au_2|\ldots|Au_n] = [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]
+	\label{eq:svd-AV}
+	\end{equation}
+	Thus, we have $AV = \Gamma U$, where $\Gamma = diag(\gamma_1, \gamma_2, \ldots, \gamma_n)$. Looking at right-hand side, we have
+	\begin{align}
+	&\Gamma U = [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]	 \\
+	\implies & U^T\Gamma U = [v_1|v_2|\ldots|v_n]^T [\gamma_1v_1|\gamma_2v_2|\ldots|\gamma_nv_n]
+	\shortintertext{Since $v_i$ are orthonormal, we have}
+	& U^T\Gamma U = diag(\gamma_1 v_1^2 | \gamma_2 v_2^2) | \ldots | \gamma_n v_n^2) = \Gamma
+	\label{eq:svd-Gamma}
+	\end{align}
+	Putting together Eqns. \ref{eq:svd-AV} \& \ref{eq:svd-Gamma}, we get
+	\begin{align}
+	U^TAV = U^T\Gamma U = \Gamma \\
+	\shortintertext{Thus, multiplying on left with $U$ and right with $V^T$, we get}
+	UU^TAVV^T = U\Gamma V^T
+	\end{align}
+	But, we have $UU^T = VV^T = I$ and hence we get the required result
+	\begin{equation}
+	A = U\Gamma V^T
+	\end{equation}
+\end{enumerate}
+
+
+\end{document}

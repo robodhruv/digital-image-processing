@@ -1,75 +1,51 @@
-%% Q4. Filtering in Frequency Domain
-% Author: Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar
+%% Q3. Notch Filter
+% Author: Dhruv Ilesh Shah, DHanvi Sreenivasan and Bhavesh Thakkar
 
+%% Log-plot of the Fourier Transform
 
-%% Ideal Low-Pass Filter
-% <include>get_idealfilt.m</include>
+load('../data/image_low_frequency_noise.mat');
+h = size(Z, 1);
+Zpad = padarray(Z, [h/2, h/2], 0, 'both');
 
-img = im2double(imread('../data/barbara256.png'));
-h = size(img, 1);
-imgpad = padarray(img, [h/2, h/2], 0, 'both');
-
-Fimg = fft2(imgpad);
+Fimg = fft2(Zpad);
 Fimg_shifted = fftshift(Fimg);
+Flog = log(abs(Fimg_shifted) + 1);
+figure('name', 'Log-plot of Fourier Transform', 'Position', [100, 100, 800, 800]), imagesc(Flog)
+colormap(jet)
 
-filt_sq_40 = get_idealfilt(h*2, 40);
-filt_sq_80 = get_idealfilt(h*2, 80);
+%% Identifying Noise
+% For this part, we run impixelinfo on the log-Fourier of the image and
+% notice two abnormal peaks as shown below
 
-figure('name', 'Visualising the Ideal LPF', 'Position', [100 100 1000 700])
-subplot(2, 2, 1), imshow(filt_sq_40)
-title('D = 40 (Magnitude Plot)')
-subplot(2, 2, 2), imshow(filt_sq_80)
-title('D = 80 (Magnitude Plot)')
-subplot(2, 2, 3), imshow(log(abs(filt_sq_40) + 1))
-title('D = 40 (Log Plot)')
-subplot(2, 2, 4), imshow(log(abs(filt_sq_80) + 1))
-title('D = 80 (Log Plot)')
+noisy_f = [247, 237; 267, 277]; % Observed
+viscircles(noisy_f, [8; 8]);
 
-%% Ideal LPF on Barbara
+%% Ideal Notch Filter
+% We see that the noise frequencies are almost pure (upto 2-pixel) impulses,
+% and we use an ideal cross-hair notch of pixel-size 3
 
-% For cut-off at 40 pixels, we have
-img_rec_pad40 = ifft2(ifftshift(Fimg_shifted.*filt_sq_40));
-img_rec_40 = real(img_rec_pad40(h/2+1:3*h/2, h/2+1:3*h/2));
+noisy_sub = sub2ind(size(Fimg_shifted), noisy_f(:, 2), noisy_f(:, 1));
+notch_filter = ones(size(Fimg_shifted));
+notch_filter(noisy_sub) = 0;
+se = strel('disk', 2, 8);
+notch_filter = imerode(notch_filter, se);
+%notch_filter = imerode(notch_filter, se);
+%notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se);
+notch_filter = imerode(notch_filter, se); % A simple trick to an ideal circular notch
 
-% For cut-off at 80 pixels, we have
-img_rec_pad80 = ifft2(ifftshift(Fimg_shifted.*filt_sq_80));
-img_rec_80 = real(img_rec_pad80(h/2+1:3*h/2, h/2+1:3*h/2));
+figure('name', 'Visualising the Notch Filter', 'Position', [100, 100, 500, 500])
+imagesc(Flog.*notch_filter);
+colormap(jet)
+title('Log-Fourier plot, after notching')
 
-figure('name', 'Ideal LPF on Barbara', 'Position', [100, 100, 800, 500])
-subplot(1, 2, 1), imshow(img_rec_40)
-title('D = 40')
-subplot(1, 2, 2), imshow(img_rec_80)
-title('D = 80')
+Fimg_rec = Fimg_shifted.*notch_filter; % Setting the noisy frequencies to zero
+img_rec_pad = ifft2(ifftshift(Fimg_rec));
+img_rec = img_rec_pad(h/2+1:3*h/2, h/2+1:3*h/2);
 
-%% Gaussian Low-Pass Filter
-% <include>get_gaussfilt.m</include>
-
-filt_gauss_40 = get_gaussfilt(h*2, 40);
-filt_gauss_80 = get_gaussfilt(h*2, 80);
-
-figure('name', 'Visualising the Gaussian LPF', 'Position', [100 100 1000 700])
-subplot(2, 2, 1), imagesc(filt_gauss_40)
-colorbar; title('\sigma = 40 (Magnitude Plot)')
-subplot(2, 2, 2), imagesc(filt_gauss_80)
-title('\sigma = 80 (Magnitude Plot)')
-colorbar; subplot(2, 2, 3), imagesc(log(filt_gauss_40 + 1))
-title('\sigma = 40 (Log Plot)')
-colorbar; subplot(2, 2, 4), imagesc(log(filt_gauss_80 + 1))
-title('\sigma = 80 (Log Plot)')
-colorbar;
-
-%% Gaussian LPF on Barbara
-
-% For cut-off at 40 pixels, we have
-img_rec_pad40 = ifft2(ifftshift(Fimg_shifted.*filt_gauss_40));
-img_rec_40 = real(img_rec_pad40(h/2+1:3*h/2, h/2+1:3*h/2));
-
-% For cut-off at 80 pixels, we have
-img_rec_pad80 = ifft2(ifftshift(Fimg_shifted.*filt_gauss_80));
-img_rec_80 = real(img_rec_pad80(h/2+1:3*h/2, h/2+1:3*h/2));
-
-figure('name', 'Gaussian LPF on Barbara', 'Position', [100, 100, 800, 500])
-subplot(1, 2, 1), imshow(img_rec_40)
-title('\sigma = 40')
-subplot(1, 2, 2), imshow(img_rec_80)
-title('\sigma = 80')
+figure('Position', [100, 100, 1300, 800])
+subplot(1, 2, 1), imshow(mat2gray(Z));
+title('Original Image')
+subplot(1, 2, 2), imshow(mat2gray(img_rec));
+title('Recovered Image')

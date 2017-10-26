@@ -50,16 +50,20 @@ imshow(img2,[]);
 title(strcat('PCA denoising with L = 200. MSE = ', num2str(MSE2)))
 
 subplot (3,2,5);
-imshow(img2,[]);
+imshow(img3,[]);
 title(strcat('Bilateral Filtering. MSE = ', num2str(MSE3)))
 
-%% Differences between Bilateral and PCA
+%% Differences between Bilateral and PCA based denoising
 % 6)c)
-% PCA based denoising methods do better than bilateral filtering(in terms of MSE). The mean square errors have been shown in the
+% PCA based denoising methods do better than bilateral filtering 
+% which can be seen visually and in terms of MSE in the above plots.
+% The mean square errors have been shown in the
 % figure. PCA filter takes into account the signal/noise estimate while
 % updating the eigencoefficeints (i.e does not change much the coefficients
 % having high singal-noise ratio and reduces the coefficients having low
 % signal to noise ratio) while bilateral filter does not do anything of
 % this sort( i.e does not give any consideration to the noise
-% characteristic). 
+% characteristic). Bilateral filter applies gaussian kernels over the
+% spatial and intensity domain to update the pixel values while the PCA
+% based denoising does a Wiener filter like update.
 

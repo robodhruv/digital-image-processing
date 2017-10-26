@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Q6. PCA based denoising and Bilateral filtering</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-25"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+      --><title>Q6. PCA based denoising and Bilateral filtering</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-26"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q6. PCA based denoising and Bilateral filtering</h1><!--introduction--><p>Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">myPCADenoising1.m</a></li><li><a href="#2">myPCADenoising2.m</a></li><li><a href="#3">MainScript</a></li><li><a href="#4">Plot</a></li><li><a href="#5">Differences between Bilateral and PCA</a></li></ul></div><h2>myPCADenoising1.m<a name="1"></a></h2><pre class="language-matlab">
+  </style></head><body><div class="content"><h1>Q6. PCA based denoising and Bilateral filtering</h1><!--introduction--><p>Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">myPCADenoising1.m</a></li><li><a href="#2">myPCADenoising2.m</a></li><li><a href="#3">MainScript</a></li><li><a href="#4">Plot</a></li><li><a href="#5">Differences between Bilateral and PCA based denoising</a></li></ul></div><h2>myPCADenoising1.m<a name="1"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> [filtered_image] = myPCADenoising1(image)
 
 patch_size=7;
@@ -212,9 +212,9 @@ tic;
 img3 = myBilateralFiltering(noisy_image,[8 8 10]);
 MSE3 = sum(sum( (image-img3).^2))/(size(image,1)*size(image,2));
 toc;
-</pre><pre class="codeoutput">Elapsed time is 0.583250 seconds.
-Elapsed time is 121.313608 seconds.
-Elapsed time is 2.698712 seconds.
+</pre><pre class="codeoutput">Elapsed time is 0.608504 seconds.
+Elapsed time is 113.178203 seconds.
+Elapsed time is 2.434134 seconds.
 </pre><h2>Plot<a name="4"></a></h2><pre class="codeinput">figure(<span class="string">'Position'</span>,[100, 100, 1200, 1200]);
 
 subplot (3,2,1);
@@ -234,9 +234,9 @@ imshow(img2,[]);
 title(strcat(<span class="string">'PCA denoising with L = 200. MSE = '</span>, num2str(MSE2)))
 
 subplot (3,2,5);
-imshow(img2,[]);
+imshow(img3,[]);
 title(strcat(<span class="string">'Bilateral Filtering. MSE = '</span>, num2str(MSE3)))
-</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2>Differences between Bilateral and PCA<a name="5"></a></h2><p>6)c) PCA based denoising methods do better than bilateral filtering(in terms of MSE). The mean square errors have been shown in the figure. PCA filter takes into account the signal/noise estimate while updating the eigencoefficeints (i.e does not change much the coefficients having high singal-noise ratio and reduces the coefficients having low signal to noise ratio) while bilateral filter does not do anything of this sort( i.e does not give any consideration to the noise characteristic).</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <h2>Differences between Bilateral and PCA based denoising<a name="5"></a></h2><p>6)c) PCA based denoising methods do better than bilateral filtering which can be seen visually and in terms of MSE in the above plots. The mean square errors have been shown in the figure. PCA filter takes into account the signal/noise estimate while updating the eigencoefficeints (i.e does not change much the coefficients having high singal-noise ratio and reduces the coefficients having low signal to noise ratio) while bilateral filter does not do anything of this sort( i.e does not give any consideration to the noise characteristic). Bilateral filter applies gaussian kernels over the spatial and intensity domain to update the pixel values while the PCA based denoising does a Wiener filter like update.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q6. PCA based denoising and Bilateral filtering
 % Bhavesh Thakkar, Dhanvi Sreenivasan and Dhruv Ilesh Shah
@@ -290,18 +290,22 @@ imshow(img2,[]);
 title(strcat('PCA denoising with L = 200. MSE = ', num2str(MSE2)))
 
 subplot (3,2,5);
-imshow(img2,[]);
+imshow(img3,[]);
 title(strcat('Bilateral Filtering. MSE = ', num2str(MSE3)))
 
-%% Differences between Bilateral and PCA
+%% Differences between Bilateral and PCA based denoising
 % 6)c)
-% PCA based denoising methods do better than bilateral filtering(in terms of MSE). The mean square errors have been shown in the
+% PCA based denoising methods do better than bilateral filtering
+% which can be seen visually and in terms of MSE in the above plots.
+% The mean square errors have been shown in the
 % figure. PCA filter takes into account the signal/noise estimate while
 % updating the eigencoefficeints (i.e does not change much the coefficients
 % having high singal-noise ratio and reduces the coefficients having low
 % signal to noise ratio) while bilateral filter does not do anything of
 % this sort( i.e does not give any consideration to the noise
-% characteristic). 
+% characteristic). Bilateral filter applies gaussian kernels over the
+% spatial and intensity domain to update the pixel values while the PCA
+% based denoising does a Wiener filter like update.
 
 
 ##### SOURCE END #####

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Q4. Filtering in Frequency Domain</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-13"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
+      --><title>Q4. Filtering in Frequency Domain</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-25"><meta name="DC.source" content="myMainScript.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Q4. Filtering in Frequency Domain</h1><!--introduction--><p>Author: Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Ideal Low-Pass Filter</a></li><li><a href="#2">Ideal LPF on Barbara</a></li><li><a href="#3">Gaussian Low-Pass Filter</a></li><li><a href="#4">Gaussian LPF on Barbara</a></li></ul></div><h2>Ideal Low-Pass Filter<a name="1"></a></h2><pre class="language-matlab">
+  </style></head><body><div class="content"><h1>Q4. Filtering in Frequency Domain</h1><!--introduction--><p>Author: Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Ideal Low-Pass Filter</a></li><li><a href="#2">Ideal LPF on Barbara</a></li><li><a href="#3">Gaussian Low-Pass Filter</a></li><li><a href="#4">Gaussian LPF on Barbara</a></li><li><a href="#5">Comments</a></li></ul></div><h2>Ideal Low-Pass Filter<a name="1"></a></h2><pre class="language-matlab">
 <span class="keyword">function</span> [ filt ] = get_idealfilt( l, D )
 <span class="comment">% This function generates an ideal LPF of size (h, w) and cut-off frequency D</span>
     filt = zeros(l, l);
@@ -143,7 +143,7 @@ subplot(1, 2, 1), imshow(img_rec_40)
 title(<span class="string">'\sigma = 40'</span>)
 subplot(1, 2, 2), imshow(img_rec_80)
 title(<span class="string">'\sigma = 80'</span>)
-</pre><img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <h2>Comments<a name="5"></a></h2><p>Comparing images from the same type of filter, we see that a small filter size of 40 causes excessive blurring-type effect, as compared to the ones with 80. This is because a smaller \sigma in Gaussian or width in ideal would allow fewer frequencies to pass. Since the image given contains significant contribution from higher frequencies, the output has lost a lot of information. Another notable difference, when comparing across the filter types, is the presence of ringing artifacts arising from the ideal filter. These can be avoided by using a smoother filter like the Gaussian, and evidently, the output of the Gaussian LPF is much cleanear.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Q4. Filtering in Frequency Domain
 % Author: Dhruv Ilesh Shah, Dhanvi Sreenivasan and Bhavesh Thakkar
@@ -220,5 +220,17 @@ subplot(1, 2, 1), imshow(img_rec_40)
 title('\sigma = 40')
 subplot(1, 2, 2), imshow(img_rec_80)
 title('\sigma = 80')
+
+%% Comments
+% Comparing images from the same type of filter, we see that a small filter
+% size of 40 causes excessive blurring-type effect, as compared to the ones
+% with 80. This is because a smaller \sigma in Gaussian or width in ideal
+% would allow fewer frequencies to pass. Since the image given contains
+% significant contribution from higher frequencies, the output has lost a
+% lot of information.
+% Another notable difference, when comparing across the filter types, is
+% the presence of ringing artifacts arising from the ideal filter. These
+% can be avoided by using a smoother filter like the Gaussian, and
+% evidently, the output of the Gaussian LPF is much cleanear.
 ##### SOURCE END #####
 --></body></html>

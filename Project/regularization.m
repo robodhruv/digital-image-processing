@@ -3,7 +3,7 @@
 
 pad_img = padarray(img, [2 2], 0, 'both');
 pad_mask = padarray(mask_m, [2 2], 0, 'both');
-G = fspecial('gaussian',2, 0.2);
+G = fspecial('gaussian',2, 1);
 new_image = pad_img;
 [x y] = meshgrid(-2:2, -2:2);
 [m n ~] = size(pad_img);
@@ -37,10 +37,10 @@ Gy = zeros(m,n,3);
                   + W(:,2)*W(:,2)'/sqrt(1+ Eigenvalues(1) + Eigenvalues(2)) ;
        
             T_inv = inv(T);
-            t = 250*iter;
+            t = 100;
             mask = exp(-((x.^2*T_inv(1,1) + y.^2*T_inv(2,2) + x.*y*(T_inv(1,2) + T_inv(2,1))))/(4*t));
-            
-            mask = mask/sum(sum(mask));
+            mask_cut = mask(max(1,4+2-i):min(end,m+4+1-i),max(1,4+2-j):min(end,n+4+1-j));
+            mask = mask/sum(sum(mask_cut));
             for k = 1:size(img,3)
                 temp_conv = conv2(new_image(i-2:i+2,j-2:j+2,k),mask,'same');
                 new_image(i,j,k) = temp_conv(3,3);

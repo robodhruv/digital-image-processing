@@ -51,4 +51,4 @@ Gy = zeros(m,n,3);
         end
     end
  end
- new_image = new_image(3:end-2, 3:end-2);
+ new_image = new_image(3:end-2, 3:end-2, :);

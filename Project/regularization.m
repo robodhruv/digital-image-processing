@@ -1,9 +1,9 @@
-%function [new_image, iter] = regularize(img, mask_m, max_iter)
+function [new_image, iter] = regularize(img, mask_m, max_iter)
 %% Regularization routine
 
 pad_img = padarray(img, [2 2], 0, 'both');
 pad_mask = padarray(mask_m, [2 2], 0, 'both');
-G = fspecial('gaussian',2, 1);
+G = fspecial('gaussian',2, 100);
 new_image = pad_img;
 [x y] = meshgrid(-2:2, -2:2);
 [m n ~] = size(pad_img);
@@ -19,9 +19,9 @@ Gy = zeros(m,n,3);
     XY = sum(Gx.*Gy, 3);
 
     disp(iter);
-    if (mod(iter, 20) == 0)
-        imshow(new_image)
-    end
+%     if (mod(iter, 20) == 0)
+%         imshow(new_image)
+%     end
     for i = 3:size(pad_img,1) - 2    
         for j = 3:size(pad_img,2) - 2
             if (pad_mask(i, j) < 1)
@@ -37,9 +37,9 @@ Gy = zeros(m,n,3);
                   + W(:,2)*W(:,2)'/sqrt(1+ Eigenvalues(1) + Eigenvalues(2)) ;
        
             T_inv = inv(T);
-            t = 100;
+            t = 0.8;
             mask = exp(-((x.^2*T_inv(1,1) + y.^2*T_inv(2,2) + x.*y*(T_inv(1,2) + T_inv(2,1))))/(4*t));
-            mask_cut = mask(max(1,4+2-i):min(end,m+4+1-i),max(1,4+2-j):min(end,n+4+1-j));
+            mask_cut = mask(max(1,4+2-i):min(end,m+1-i),max(1,4+2-j):min(end,n+1-j));
             mask = mask/sum(sum(mask_cut));
             for k = 1:size(img,3)
                 temp_conv = conv2(new_image(i-2:i+2,j-2:j+2,k),mask,'same');
@@ -51,3 +51,4 @@ Gy = zeros(m,n,3);
         end
     end
  end
+ new_image = new_image(3:end-2, 3:end-2);
